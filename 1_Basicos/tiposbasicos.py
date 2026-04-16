@@ -26,3 +26,20 @@ nombre = "Irene"
 apellidos = " Martinez"
 mensaje = 'El niño dijo : "Qué pasa"'
 print(mensaje)
+
+# objetivo : Irene Martinez: 36
+nombre_completo = nombre + " "+ apellidos + ": " + str(edad)
+print(nombre_completo)
+
+nombre_completo2 = f'{nombre} {apellidos}: {edad}'
+print(nombre_completo2)
+
+texto_largo = """
+selecciona una opción
+[1] Sopa
+[2] pure de calabaza
+[3] Gazpacho
+"""
+
+opcion = input(texto_largo)
+print(f'la opcion es {opcion}')
