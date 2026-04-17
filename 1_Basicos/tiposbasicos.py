@@ -18,7 +18,7 @@ precio = 199.99
 #booleano: solo si/no, verdadero/falso
 
 estado = True
-
+activo = False
 
 # cadena de caracteres - string
 
