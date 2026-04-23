@@ -1,49 +1,49 @@
 # vamos a ver funciones que me permitan manipular texto.
 
 # funciones que permiten convertir texto sin modificar el original.
-# """
-# texto = "hOLa"
 
-# # pasar todo a minusculas
+texto = "hOLa"
 
-# print(texto.lower())
+# pasar todo a minusculas
 
-# # pasar todo a mayusculas
+print(texto.lower())
 
-# print(texto.upper())
+# pasar todo a mayusculas
 
-# # texto original
-# print(texto)
+print(texto.upper())
 
-# # convertir el texto en capitular
-# print(title.capitalize())
+# texto original
+print(texto)
 
-# # convertir la primera letra de cada palabra en mayuscula
-# print(titulo.title())
+# convertir el texto en capitular
+print(title.capitalize())
 
-# # intercambiar mayusculas por minusculas
-# print(texto.swapcase()) #hOLa => HolA
+# convertir la primera letra de cada palabra en mayuscula
+print(titulo.title())
 
-# dni = '456789V'
+# intercambiar mayusculas por minusculas
+print(texto.swapcase()) #hOLa => HolA
 
-# print( dni.zfill(9) )
+dni = '456789V'
 
-# # metodos de busqueda dentro de la cadena
+print( dni.zfill(9) )
 
-# frase = 'en un lugar de la mancha'
+# metodos de busqueda dentro de la cadena
 
-# print(len(frase)) # busca numero de caracteres
+frase = 'en un lugar de la mancha'
 
-# # cuantas "a" hay en la cadena
-# print('numero de as', frase.lower().cont('a'))
+print(len(frase)) # busca numero de caracteres
 
-# # reemplazar un texto por otro
-# nombre = 'Pablo'
-# frase = 'David tiene un ferrari'
-# frase_cambiada = frase.replace('David', nombre)
-# print(frase)"""
+# cuantas "a" hay en la cadena
+print('numero de as', frase.lower().cont('a'))
 
-# en esta frase : Como están los maquinas, quitar los espacios
+# reemplazar un texto por otro
+nombre = 'Pablo'
+frase = 'David tiene un ferrari'
+frase_cambiada = frase.replace('David', nombre)
+print(frase)
+
+en esta frase : Como están los maquinas, quitar los espacios
 
 frase = 'Cómo están los maquinas?'
 
