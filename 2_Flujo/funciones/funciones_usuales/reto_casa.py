@@ -1,7 +1,6 @@
 import math
 
 # reto para casa
-nota = 4.99999999999999
-for i in range(nota):
-    print(f'{i}.2')
-
+Decimal = 4.99999999999999
+valor = Decimal('4.9999999999999').quantize(Decimal('1.0000000000000'))
+print(valor)  

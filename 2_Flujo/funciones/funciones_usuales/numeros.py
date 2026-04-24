@@ -24,3 +24,12 @@ print(math.ceil(nota))
 #redondeo a la baja
 
 print(math.floor(nota))
+
+# raiz cuadrada en un numero
+print(math.sqrt(256))# 16
+
+# suma de un conjunto de numeros
+suma_total = math.fsum([1,2,3,4,5,6]) # 21.0
+print(suma_total)
+
+
