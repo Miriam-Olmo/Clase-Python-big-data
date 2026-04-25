@@ -1,54 +1,55 @@
-# vamos a ver funciones que me permitan manipular texto.
+# vamos a ver funciones que me permita manipular texto
 
-# funciones que permiten convertir texto sin modificar el original.
+""" existen un serie de funciones / acciones que me permiten modificar las cadenas de texto
 
-texto = "hOLa"
+vamos encontrarnos funciones que reciben un texto por parametro
 
+        nombre_funcion(texto)
+        len(nombre)
+
+vamos encontrarnos funciones que se aplican al texto
+        texto.nombre_funcion()
+        nombre.upper()
+
+"""
+
+# funciones que permite convertir texto sin modificar el original
+
+texto = "hOlA"
+titulo = "Hola COMO Estas"
 # pasar todo a minusculas
-
-print(texto.lower())
-
-# pasar todo a mayusculas
-
-print(texto.upper())
-
-# texto original
-print(texto)
-
-# convertir el texto en capitular
-print(title.capitalize())
-
+print(texto.lower()) # hola
+# pasar todo a MAYUSCULAS
+print(texto.upper()) # HOLA
+# convertir el texto en Capitular Hola
+print(titulo.capitalize()) # Hola como estas
 # convertir la primera letra de cada palabra en mayuscula
-print(titulo.title())
+print(titulo.title()) # Hola Como Estas
+# i
+print(texto.swapcase()) # hOlA => HoLa
 
-# intercambiar mayusculas por minusculas
-print(texto.swapcase()) #hOLa => HolA
+
+# funciones de comprobación
 
 dni = '456789V'
-
 print( dni.zfill(9) )
 
-# metodos de busqueda dentro de la cadena
+# metodos de busquedas dentro de la cadena.
+frase = "En un lugar de la manchA"
 
-frase = 'en un lugar de la mancha'
-
-print(len(frase)) # busca numero de caracteres
+# cantidad de caracteres
+print( len(frase) ) # numero de caracteres
 
 # cuantas "a" hay en la cadena
-print('numero de as', frase.lower().cont('a'))
+print('numero de as', frase.lower().count('a'))
 
-# reemplazar un texto por otro
+# replazar un texto por otro, no modifica la variable original
 nombre = 'Pablo'
 frase = 'David tiene un ferrari'
 frase_cambiada = frase.replace('David', nombre)
-print(frase)
-
-en esta frase : Como están los maquinas, quitar los espacios
-
-frase = 'Cómo están los maquinas?'
-
-
-frase_cambiada = frase.replace(" ", "", 2)
 print(frase_cambiada)
 
-
+# en esta frase: Como estan los maquinas, quitar los espacios. Comoestanlosmaquinas
+texto = "Como estan los maquinas"
+texto_final = texto.replace(" ", "", 1)
+print(texto_final)

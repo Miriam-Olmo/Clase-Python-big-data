@@ -3,67 +3,39 @@
 # Pide al usuario una frase.
 # Muestra:
 #   - La frase con todas las palabras invertidas individualmente
-#     (ej: "hola mundo" → "aloh odnum")
-#   - devolver la cantidad de caracteres de la frase
-#   - El número de veces que aparece cada vocal (a, e, i, o, u)
-#   - La frase con los espacios reemplazados por guiones bajos
-#   - La frase con palabras invertidad Tony Stark => Stark Tony
+#     (ej: "hola mundo" → "aloh odnum") ✅
+#   - devolver la cantidad de letras de la frase ✅
+#   - El número de veces que aparece cada vocal (a, e, i, o, u) ✅
+#   - La frase con los espacios reemplazados por guiones bajos ✅
+#   - La frase con palabras invertidas Tony Stark => Stark Tony ✅
 # =============================================================================
 
-# primero
-frase = "Hola mundo"
-lista_caracteres = list(frase)
-
-cantidad2 = len(list(frase))
-frase_invertida2 = ""
-while(cantidad2 >= 0):
-    frase_invertida2 += f'(lista_caracteres[cantidad2-1])'
-    cantidad2 -= 1
-print(frase_invertida2) 
-
-
-# segundo
 def cantidad_letras(frase):
     contador = 0
     for caracter in frase:
         if caracter.isalpha():
             contador += 1
     return contador
-print(cantidad_letras(frase))
+
+texto = input('Dime algo bonito: ')
+print(cantidad_letras(texto))
 
 
-
-
-frase = "Hola mundo"
-nº_caracteres = len(frase)
-def contar_vocales(frase,vocal):
+def contar_vocal(frase, vocal):
     return frase.count(vocal)
-    for vocal in 'aeiouáéíóúAEIOUÁÉÍÓÚ':
-        print(vocal, contar_vocales(frase,vocal))
 
+for vocal in "aeiouáéíóúÁÉÍÓÚAEIOU":
+    numero = contar_vocal(texto, vocal)
+    if numero != 0:
+        print(vocal, numero)
+    
+    
 def frase_con_separador(frase, separador):
-    return frase.replace(" ",separador)
+    return frase.replace( " ", separador )
 
-print(frase_con_separador(frase, '_'))
-
-# cuarto
-
-## el avion se estrello por la tormenta
-## tormenta la por estrello se avion el
-
-# paso 1 convertir mi frase en una lista
-texto = "el avion se estrello por la tormenta"
-lista_palabras = texto.split(" ")
-cantidad = len(lista_palabras)
-frase_invertida = ""
+print(frase_con_separador(texto, '_'))
 
 
-cantidad = len(list(frase))
-frase_invertida = ""
-while(cantidad >= 0):
-    frase_invertida += f'(lista_caracteres[cantidad2-1])'
-    cantidad2 -= 1
-print(frase_invertida) 
 ## El avión despegó de la pista
 ## pista la de despegó avión El
 
@@ -103,5 +75,3 @@ invertir_lista(lista_palabras , " ")
 
 lista_caracteres = list(texto)
 invertir_lista(lista_caracteres, "")
-
-

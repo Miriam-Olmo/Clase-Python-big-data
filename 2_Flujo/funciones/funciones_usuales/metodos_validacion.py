@@ -1,18 +1,16 @@
-valor = input("dime algo bonito: ")
+valor = input('Dime algo bonito: ')
+print( valor.isdigit()) # solo digitos numeros
+print( valor.isalpha() ) # solo letras
+print( valor.isalnum() ) # numeros y letras.
+print( valor.isnumeric() ) # si es numero
 
-print(valor.isdigit())  # solo digitos
-print(valor.isalpha())   # solo letras
-print(valor.isalnum())   # letras y numeros
-print(valor.isnumeric())  # solo numeros
+## saber si una cadena de caracteres empieza, termina o incluye un determinado caracter. True o False
 
-# sabaer si una cadena de caracteres empieza, termina o incluye un caracter determinado
-
-texto = " en un lugar de la mancha"
-print(texto.startswith('e')) # false
-print(texto.endswith('a')) # true
+texto = "En un lugar de la mancha"
+print(texto.startswith('e')) # False
+print(texto.endswith('a')) # True
 
 # saber si algo esta incluido
-
-busqueda = input('dime que quieres buscar: ')
-resultado = busqueda.lower()in texto.lower()
-print('incluido'[resultado])
+busqueda = input('Dime que quieres buscar: ')
+resultado = busqueda.lower() in texto.lower()
+print('incluido', resultado)
