@@ -52,6 +52,7 @@ print("---------------------------")
 # solucion profesor (juanan)
 
 
+
 def quitar_acentos(texto):
     texto = texto.lower()
     texto_limpio = ""
@@ -102,4 +103,3 @@ def es_palindromo(texto):
     
     
 es_palindromo('Isaac no ronca así')
-

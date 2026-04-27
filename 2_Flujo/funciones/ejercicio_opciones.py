@@ -6,43 +6,68 @@
     # 5- salir
 # cualquier opcion no descrita vuelve a ejecutar el programa
 
-## """menu"
+
+
+
+#ejercicio profesor ( juanan)
+
+def quitar_espacios_acentos(texto):
+    texto = texto.replace(" ", "")
+    texto = texto.replace("á", 'a')
+    texto = texto.replace("é", 'e')
+    texto = texto.replace("í", 'i')
+    texto = texto.replace("ó", 'o')
+    texto = texto.replace("ú", 'u')
+    texto = texto.replace("ü", 'u')
+    return texto
+    
+def contar_letras(texto):
+    texto = texto.lower()
+    # quitar el caracter espacio para que no me lo cuente
+    resultado = quitar_espacios_acentos(texto)
+    contador = 0
+    for caracter in resultado:
+        if caracter.isalpha():
+            contador += 1
+    return f"La cantidad de letras es {contador}"
+
+def invertir_palabras(texto):
+    # es convertir en una lista texto
+    lista = texto.split(" ")
+    texto_invertido = ''
+    for palabra in lista:
+        texto_invertido = palabra + " " + texto_invertido
+    return texto_invertido
 
 def main():
-    menu = """elige una opcion
-    [1] pasar texto a minusculas
-    [2] contar la cantidad de letras de un texto
-    [3] invertir el texto
-    [4] quitar espacios en blanco y acentos
-    [5] salir
+    menu = """
+### Bienvenido a nuestra app ###
+[1]. Pasar a minúsculas
+[2]. Contar caracter o letras
+[3]. Invertir el texto introducido
+[4]. Quitar espacio en blanco
+[x]. Salir    
     """
     print(menu)
-    opcion = input('que opcion quieres? ' )
-    if opcion == "1":
-        texto = input('dime un texto: ').lower()
-        print(texto)
-    elif opcion == "2":
-        texto = input('dime un texto: ')
-        print("la cantidad de letras es:" (len[texto]))
-    elif opcion == "3":
-        texto = input('dime un texto: ')
-        lista = texto.split(" ")
-        texto_invertido = ""
-        for palabra in lista:
-            texto_invertido = palabra + " " + texto_invertido
-            return texto_invertido
-            print(texto_invertido)
-    elif opcion == "4":
-        texto = input('dime un texto: ')
-        textosinacentosniespacios = texto.replace(' ', '') and texto.replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')
-        print(textosinacentosniespacios)
-    elif opcion == '5':
-        print('nos vemos pronto')
+    opcion = input('¿Qué opción quieres hacer? ')
+    resultado = ""
+    if opcion == '1':
+       texto = input('Introduce el texto a transformar: ')
+       resultado = texto.lower()
+    elif opcion == '2':
+        texto = input('Introduce el texto a transformar: ')
+        resultado = contar_letras(texto)
+    elif opcion == '3':
+        texto = input('Introduce el texto a transformar: ')
+        resultado = invertir_palabras(texto) 
+    elif opcion == '4':
+        texto = input('Introduce el texto a transformar: ')
+        resultado = quitar_espacios_acentos(texto)
+    elif opcion == 'x':
+        print('Hasta pronto')
     else:
-        print('elige una opcion valida')
-        return main()
-  
+        print('opcion no valida, intentalo de nuevo')
+        main()
+    print(resultado)
+
 main()
-
-
-
