@@ -3,10 +3,7 @@
 def pedir_numeros():
         numero1 = float(input('dime un numero: '))
         numero2 = float(input('dime un numero: '))
-        return numero1, numero2
-
-
-
+    
 
 def main():
     menu = """
