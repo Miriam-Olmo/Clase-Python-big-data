@@ -36,4 +36,31 @@ def devolver_datos_usuario():
     edad = input('dime tu edad: ')
     email = input('dime tu email: ')
     return nombre, edad, email
-print(devolver_datos_usuario()[1] )
+# print(devolver_datos_usuario()[1] )
+
+# recorrer una tupla
+
+for i in range(0, len(frutas)):
+    print(frutas[i])
+
+print('----------')
+
+# para recoger elemento por elemento
+
+for fruta in frutas:
+    print(fruta)
+
+
+# el error con las tuplas
+"""
+frutas[0] = "mandarina" 
+"""
+
+# eliminar una tupla
+
+del otras_frutas
+print(otras_frutas)
+
+# si creo una tupla de un unico elemento
+tupla_unico_elemento = ('Juan') # sin coma lo convierte en cadena de caraceteres; si le pones una coma si aparece como tupla
+print(tupla_unico_elemento)
