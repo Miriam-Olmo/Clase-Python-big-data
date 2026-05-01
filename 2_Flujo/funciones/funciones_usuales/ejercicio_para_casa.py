@@ -52,7 +52,6 @@ print("---------------------------")
 # solucion profesor (juanan)
 
 
-
 def quitar_acentos(texto):
     texto = texto.lower()
     texto_limpio = ""
