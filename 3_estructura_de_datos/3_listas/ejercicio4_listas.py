@@ -10,6 +10,10 @@
 
 # menu, pintar el menu con las opciones - lista notas, añadir una nota al final, añadir una nota por posicion, mostrar la lista ordenada, calcular media, calcular maximo, calcular minimo, cuantos alumnos han aprobado. salir
 
+import math
+
+notas = [7.5, 4.0, 8.5, 6.0, 9.0, 3.5, 5.5]
+
 def lista_notas(notas):
     for nota in notas:
         color = "1" if nota < 5 else "2"
@@ -21,10 +25,22 @@ def nueva_nota(nota,posicion=len(notas)):
     notas.insert(posicion,nota)
     
 
+def nota_media(notas):
+    resultado = sum(notas)/len(notas)
+    print(resultado)
+
+def nota_max(notas):
+    mejor_nota = max(notas)
+    print(mejor_nota)
+
+def nota_min(notas):
+    peor_nota = min(notas)
+    print(peor_nota)
 
 
+    
+    
 
-notas = [7.5, 4.0, 8.5, 6.0, 9.0, 3.5, 5.5]
 
 def main():
     
@@ -49,17 +65,21 @@ def main():
         nueva_nota(nota)
     elif option == '3':
         nota = float((input('que nota quieres añadir: ')))
-        nueva_nota(2,nota)
+        posicion = int(input('dime la posicion: '))
+        nueva_nota(posicion,nota)
     elif option == '4':
-        print('Ordenar de menor a mayor')
+        notas_ordenadas = sorted(notas, key=lambda notas:notas, reverse=True)
+        print(notas_ordenadas)
     elif option == '5':
-        print('Calcular media')
+        nota_media(notas)
     elif option == '6':
-        print('Calcular maximo')
+        nota_max(notas)
     elif option == '7':
-        print('Calcular minimo')
+        nota_min(notas)
     elif option == '8':
-        print('Cuanto aprobados')
+        for nota in notas:
+            if nota >= 5:
+                print(float(nota))
     elif option == 'x':
         print('Hasta pronto')
         return
