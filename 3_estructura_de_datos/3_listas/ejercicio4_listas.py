@@ -14,6 +14,8 @@ import math
 
 notas = [7.5, 4.0, 8.5, 6.0, 9.0, 3.5, 5.5]
 
+
+
 def lista_notas(notas):
     for nota in notas:
         color = "1" if nota < 5 else "2"
@@ -23,7 +25,7 @@ def lista_notas(notas):
 # print( f'\033[32m {nota} \033[0m' ) # verde
 def nueva_nota(nota,posicion=len(notas)):
     notas.insert(posicion,nota)
-    
+
 
 def nota_media(notas):
     resultado = sum(notas)/len(notas)
@@ -36,6 +38,25 @@ def nota_max(notas):
 def nota_min(notas):
     peor_nota = min(notas)
     print(peor_nota)
+
+# opcion juunior
+
+def contar_notas(notas):
+    contador = 0
+    for nota in notas:
+        if nota >= 5:
+            contador += 1
+    return contador
+
+
+# opcion 2: senior
+def contar_notas_senior(notas, tipo='aprobados'):
+    lista_aprobados = list(filter(lambda nota: nota >= 5, notas))
+    if tipo == 'suspensos':
+        return len(notas) - len(lista_aprobados)
+    return len(lista_aprobados)
+
+
 
 
     
@@ -68,8 +89,8 @@ def main():
         posicion = int(input('dime la posicion: '))
         nueva_nota(posicion,nota)
     elif option == '4':
-        notas_ordenadas = sorted(notas, key=lambda notas:notas, reverse=True)
-        print(notas_ordenadas)
+        notas_ordenadas = sorted(notas, reverse=True)
+        lista_notas(notas_ordenadas)
     elif option == '5':
         nota_media(notas)
     elif option == '6':
@@ -77,9 +98,9 @@ def main():
     elif option == '7':
         nota_min(notas)
     elif option == '8':
-        for nota in notas:
-            if nota >= 5:
-                print(float(nota))
+        tipo = input(' ¿qué buscas, aprobados o suspensos?: ')
+        numero = contar_notas_senior(notas, tipo)
+        print(f'el numero de {tipo} es igual a {numero}')
     elif option == 'x':
         print('Hasta pronto')
         return
