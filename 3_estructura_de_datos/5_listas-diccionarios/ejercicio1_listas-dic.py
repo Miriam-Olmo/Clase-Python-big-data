@@ -46,6 +46,18 @@ def main():
         insertar_contacto(nombre, telefono, contactos)
     elif option == '2':
         pintar_contactos(contactos)
+    elif option == '3':
+           if contactos:
+                borrado = contactos.pop()
+                print(f"Eliminado: {borrado['nombre']}")
+    elif option == '4':
+            nombre_borrar = input('Dime un nombre: ')
+            for i in range(len(contactos)):
+                if contactos[i]['nombre'] == nombre_borrar:
+                    contactos.pop(i) 
+                    return
+                else:
+                    print("No se encontró ningún contacto con ese nombre.")
     elif option == 'x':
         print('Hasta pronto')
         return
