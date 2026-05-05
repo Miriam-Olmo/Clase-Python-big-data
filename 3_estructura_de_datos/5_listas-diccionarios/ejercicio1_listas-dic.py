@@ -3,32 +3,51 @@
 # contactos = []
 # en la opcion 1 inserta contacto pedir los datos de contacto, nombre y telefono. E insertarlo en la lista.
 # podremos insertar los contactos que queramos antes de salir
-# opcion 2: pintar la lista contactos 
-
-# 	Juan Antonio : 9876543
-#   ----------------------
-#   Miguel Angel: 567899
-#   ----------------------
 contactos = []
 
 def insertar_contacto(nombre, tlf, lista):
-    #paso 1: crear el diccionario
+    # paso 1: crear el diccionario
     contacto_nuevo = {
         'nombre': nombre,
         'telefono': tlf
     }
-
-
     # paso 2: añadir el diccionario a la lista
-    lista.append(contacto_nuevo)
-    print(lista)
+    lista.append( contacto_nuevo )
+    print('## Contacto añadido correctamente ##')
 
-def pintar_contactos(lista):
+## opcion 2: pintar la lista contactos 
+# Juan Antonio : 9876543
+# ----------------------
+# Miguel Angel: 567899
+# ----------------------
+def pintamos_agenda(lista):
     for contacto in lista:
+        print( " " )
         print(contacto['nombre'])
-        print('_____')
-        print(contacto['telefono'])
+        print('-------------------')
+        print(contacto['telefono'])  
+        print( " " )
         print('###')
+        
+def borrar_contacto(lista, nombre=""):
+    if nombre != "":
+        # borramos por nombre
+        lista.remove(nombre)
+        print(f'### contacto con nombre {nombre} eliminado')
+    else:
+        #borramos el ultimo
+        lista.pop()
+        print('### Último contacto borrado correctamente ###')
+        
+def limpiadora_datos(texto):
+    # paso 1: pasar a minuscula
+    texto = texto.lower()
+    # paso 2: quitar acentos
+    lista_vocales_acentos = ['á', 'é', 'í', 'ó', 'ú', 'ü']
+    lista_vocales = ['a', 'e', 'i', 'o', 'u', 'u']
+    for i in range(len(lista_vocales_acentos)):
+        texto = texto.replace( lista_vocales_acentos[i], lista_vocales[i] )
+    return texto
 
 def main():
     menu = """## Bienvenido a la agenda de contactos ##
@@ -45,19 +64,26 @@ def main():
         telefono = input('Teléfono de contacto: ')
         insertar_contacto(nombre, telefono, contactos)
     elif option == '2':
-        pintar_contactos(contactos)
+        pintamos_agenda(contactos)
     elif option == '3':
-           if contactos:
-                borrado = contactos.pop()
-                print(f"Eliminado: {borrado['nombre']}")
+           borrar_contacto(contactos)
+        #    if contactos:
+        #         borrado = contactos.pop()
+        #         print(f"Eliminado: {borrado['nombre']}")
     elif option == '4':
-            nombre_borrar = input('Dime un nombre: ')
-            for i in range(len(contactos)):
-                if contactos[i]['nombre'] == nombre_borrar:
-                    contactos.pop(i) 
-                    return
-                else:
-                    print("No se encontró ningún contacto con ese nombre.")
+        # borramos por nombre
+        nombre = input('Dime el nombre a borrar: ')
+        # limpiar los datos
+        nombre = limpiadora_datos(nombre)
+        borrar_contacto(contactos, nombre)
+
+            # nombre_borrar = input('Dime un nombre para borrar: ').lower()
+            # for i in range(len(contactos)):
+            #     if contactos[i]['nombre'] == nombre_borrar:
+            #         contactos.pop(i) 
+            #         return
+            #     else:
+            #         print("No se encontró ningún contacto con ese nombre.")
     elif option == 'x':
         print('Hasta pronto')
         return
