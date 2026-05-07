@@ -1,29 +1,55 @@
 from data.trabajadores import trabajadores
 
-
 def calcular_coste_hora_extra(trabajador):
     # dividimos el sueldo por las horas y sacamos el coste hora
-    # multiplicamos por las horas extra y obtenemos el coste_horas_extra
+    coste_hora_extra = trabajador['sueldo_base'] / trabajador['horas_contrato']
+    # multiplicamos por las horas extra, y obtenemos el coste_horas_extra
+    total_horas_extra = coste_hora_extra * trabajador['horas_extra']    
     # se lo añadimos al trabajo clave: valor
-    coste_horas_extra = trabajador['sueldo_base'] / trabajador['horas_contrato']
-    total_horas_extra = coste_horas_extra * trabajador['horas_extra']
     trabajador['total_horas_extra'] = total_horas_extra
-    print(trabajador)
 
-for trabajador in trabajadores:
-    calcular_coste_hora_extra(trabajador)
 
-#calcular nomina de un trabajador
+
+## calcular la nomina de un trabajador
 
 def calcular_nomina(trabajador):
-    bruto = trabajador['sueldo_base'] + trabajador['total_horas_extra']
-    IRPF = trabajador['sueldo_base'] * (trabajador['porcentaje_impuestos'] / 100)
-    neto_sin_extras = bruto - IRPF
-    resultado_neto = neto_sin_extras + trabajador['total_horas_extra']
-    trabajador['resultado_neto'] = resultado_neto
-    print(trabajador)
+    irpf = trabajador['sueldo_base'] * (trabajador['porcentaje_impuestos']/100)
+    sueldo_neto_sin_extras = trabajador['sueldo_base'] - irpf
+    sueldo_final = sueldo_neto_sin_extras + trabajador['total_horas_extra']
+    trabajador['nomina'] = sueldo_final
 
-# calcular nomina de todos los trabajadores
+## calcular la nomina de todos los trabajadores.
+## calcular los horas extra de todos los trabajadores.
 for trabajador in trabajadores:
+    calcular_coste_hora_extra(trabajador)
     calcular_nomina(trabajador)
-# horas extra sin impuestos
+    
+
+print(trabajadores)
+
+# pintar todos los trabajadores de la lista
+def pintar_trabajadores(lista_trabajadores):
+    for trabajador in lista_trabajadores:
+        print('#' * 30)
+        print(f"{trabajador['nombre']} - {trabajador['departamento']} - {trabajador['nomina']}")
+        print('#' * 30)
+
+pintar_trabajadores(trabajadores)
+# filtrar los trabajadores y pintarlos por categoria
+
+
+
+def filtrar_departamento(lista_trabajadores,departamento):
+    lista_filtrada = []
+    for trabajador in lista_trabajadores:
+        if trabajador['departamento'] == departamento:
+                lista_filtrada.append(trabajador)
+    return lista_filtrada
+
+print('-'*30)
+
+lista_direccion = filtrar_departamento(trabajadores, 'Dirección')
+
+print('-'*30)
+
+pintar_trabajadores(lista_direccion)
