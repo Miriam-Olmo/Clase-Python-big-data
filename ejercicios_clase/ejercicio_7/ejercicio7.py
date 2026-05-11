@@ -8,7 +8,7 @@
 # trabajamos con modulos separados. modulo principal y secundario
 
 # el fichero se llamará lista_compra.txt
-from lib.functions import añadir_prducto
+from lib.functions import añadir_producto, ver_lista
 
 def main():
     menu = """
@@ -23,9 +23,9 @@ def main():
     if opcion == '1':
         nombre = input( 'que producto necesitas: ')
         cantidad = input(' cuantos quieres: ')
-        añadir_prducto(nombre, cantidad)
+        añadir_producto(nombre.lower(), cantidad)
     elif opcion == '2':
-        pass
+        ver_lista('lista_compra.txt')
     elif opcion == '3':
         pass
     elif opcion == 'x':

@@ -1,0 +1,5 @@
+leche => 2
+carne picada => 4
+pasta => 2
+lentejas => 1
+judias => 2
