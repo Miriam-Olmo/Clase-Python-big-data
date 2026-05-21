@@ -21,7 +21,7 @@ def limpiar_cache_eur(valor):
     valor = round(float(valor), 2)
     return valor
 
-def procesar_texto(lista):
+def procesar_artistas(lista):
     lista_limpia = []
     for item in lista:
         item_limpio = {
@@ -38,4 +38,10 @@ def procesar_texto(lista):
 
 
 
-artistas_limpios = procesar_texto(artistas)
+
+
+
+artistas = leer_csv('datos', 'artistas.csv')
+programa = cargar_excel('datos', 'escenarios_horarios.xlsx')
+ventas = cargar_json('datos', 'ventas_entradas.json')
+patrocinadores = cargar_xml('datos', 'patrocinadores.xml')
