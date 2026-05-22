@@ -19,7 +19,6 @@ def cargar_excel(carpeta, archivo):
    excel = load_workbook(f"./{carpeta}/{archivo}")
    hoja = excel.active
    
-   #cargamos las cabeceras
    filas = hoja.iter_rows(values_only = True)
    cabeceras = next(filas)
    
