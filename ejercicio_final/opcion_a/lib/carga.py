@@ -2,10 +2,33 @@ import csv
 from openpyxl import load_workbook
 import os
 import json
+import xml.etree.ElementTree as et
 
 
-def leer_csv(carpeta, fichero):
-    fichero = open(f"{carpeta}/{fichero}", "r", encoding='UTF-8')
+def mostrar_info(nombre_fichero, columnas, registros):
+
+    print("\n" + "=" * 50)
+    print("FICHERO:", nombre_fichero)
+    print("=" * 50)
+
+    # Número total de registros
+    print("\nNúmero total de registros:", len(registros))
+
+    # Campos / columnas
+    print("\nCampos/Columnas:")
+    print(columnas)
+
+    # Primeros 5 registros
+    print("\nPrimeros 5 registros:")
+
+    for registro in registros[:5]:
+        print(registro)
+
+
+
+
+def leer_csv(carpeta, archivo):
+    fichero = open(f"{carpeta}/{archivo}", "r", encoding='UTF-8')
     lector = csv.DictReader(fichero) 
     artistas = list(lector)
     fichero.close()
@@ -24,10 +47,10 @@ def cargar_excel(carpeta, archivo):
    
    lista_resultante = []
    for fila in hoja.iter_rows(min_row=2, values_only=True):
-       producto = dict(zip(cabeceras, fila))
-       lista_resultante.append(producto)
+       escenario = dict(zip(cabeceras, fila))
+       lista_resultante.append(escenario)
        
-   print(lista_resultante)
+   return lista_resultante
 
 cargar_excel('datos', 'escenarios_horarios.xlsx')
 
@@ -37,12 +60,13 @@ cargar_excel('datos', 'escenarios_horarios.xlsx')
 def cargar_json(carpeta, nombre):
     fichero = open(f"./{carpeta}/{nombre}", "r", encoding="UTF-8")
     datos = json.load(fichero)
-    print(datos)
+    fichero.close()
+    return datos
 
 cargar_json('datos', 'ventas_entradas.json')
 
 
-import xml.etree.ElementTree as et
+
 
 
 def cargar_xml(carpeta, fichero):
@@ -68,6 +92,24 @@ def cargar_xml(carpeta, fichero):
     
 cargar_xml('datos', 'patrocinadores.xml')
 
+
+def resumen(nombre, datos):
+
+    print("\n==========")
+    print(nombre)
+    print("==========")
+
+    print("Total registros:", len(datos))
+
+    print("\nCampos:")
+
+    for campo in datos[0].keys():
+        print("-", campo)
+
+    print("\nPrimeros 5 registros:")
+
+    for registro in datos[:5]:
+        print(registro)
 
 artistas = leer_csv('datos', 'artistas.csv')
 programa = cargar_excel('datos', 'escenarios_horarios.xlsx')

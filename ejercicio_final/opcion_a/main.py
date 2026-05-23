@@ -1,20 +1,60 @@
-from lib.carga import leer_csv, cargar_excel, cargar_json, cargar_xml
-from lib.limpieza import procesar_artistas, procesar_programa, procesar_ventas, procesar_patrocinadores,limpiar_id,limpiar_dni,limpiar_texto,limpiar_eur,limpiar_fecha
+from lib.carga import resumen,leer_csv, cargar_excel, cargar_json, cargar_xml
+from lib.limpieza import limpiar_artistas, limpiar_programa, limpiar_ventas, limpiar_patrocinadores,limpiar_texto,normalizar_texto
+
+
+
 
 artistas = leer_csv('datos', 'artistas.csv')
 programa = cargar_excel('datos', 'escenarios_horarios.xlsx')
 ventas = cargar_json('datos', 'ventas_entradas.json')
 patrocinadores = cargar_xml('datos', 'patrocinadores.xml')
 
-artistas_limpio = procesar_artistas(artistas, 'artistas_limpio.csv')
+# resumen("artistas.csv", artistas)
 
-programa_limpio = procesar_programa(programa, 'programa_limpio.xlsx')
+# resumen(
+#     "escenarios_horarios.xlsx",
+#     programa
+# )
 
-ventas_limpias = procesar_ventas(ventas, 'ventas_limpias.json')
+# resumen(
+#     "ventas_entradas.json",
+#     ventas
+# )
 
-patrocinadores_limpios = procesar_patrocinadores(patrocinadores, 'patrocinadores_limpios.xml')
+# resumen(
+#     "patrocinadores.xml",
+#     patrocinadores
+# )
 
 
+
+
+
+
+artistas_limpio = limpiar_artistas(artistas)
+
+programa_limpio = limpiar_programa(programa)
+
+ventas_limpias = limpiar_ventas(ventas)
+
+patrocinadores_limpios = limpiar_patrocinadores(patrocinadores)
+
+correcciones = 0
+
+for artista in artistas:
+
+    nombre_original = artista["nombre"]
+
+    nombre_limpio = normalizar_texto(
+        nombre_original
+    )
+
+    if nombre_original != nombre_limpio:
+        correcciones += 1
+
+    artista["nombre"] = nombre_limpio
+
+print("Correcciones:", correcciones)
 
 
 
