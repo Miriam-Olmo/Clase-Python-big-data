@@ -1,230 +1,179 @@
-from lib.carga import resumen,leer_csv, cargar_excel, cargar_json, cargar_xml
-from lib.limpieza import limpiar_artistas, limpiar_programa, limpiar_ventas, limpiar_patrocinadores,limpiar_texto,normalizar_texto
+# main.py
 
 
+# ====================================
+# IMPORTACIONES
+# ====================================
+
+from lib.auditoria import *
+
+from lib.limpieza import *
 
 
-artistas = leer_csv('datos', 'artistas.csv')
-programa = cargar_excel('datos', 'escenarios_horarios.xlsx')
-ventas = cargar_json('datos', 'ventas_entradas.json')
-patrocinadores = cargar_xml('datos', 'patrocinadores.xml')
+# ====================================
+# DATOS DE EJEMPLO
+# ====================================
 
-# resumen("artistas.csv", artistas)
+artistas = [
 
-# resumen(
-#     "escenarios_horarios.xlsx",
-#     programa
-# )
+    {
+        'nombre': ' jose  garcia ',
+        'pais': ' españa ',
+        'genero_musical': 'rokc',
+        'cache_eur': '1.500,50€'
+    },
 
-# resumen(
-#     "ventas_entradas.json",
-#     ventas
-# )
+    {
+        'nombre': 'MARIA LOPEZ',
+        'pais': 'francia',
+        'genero_musical': 'Rock',
+        'cache_eur': '2000€'
+    },
 
-# resumen(
-#     "patrocinadores.xml",
-#     patrocinadores
-# )
+    {
+        'nombre': '',
+        'pais': 'Portugal',
+        'genero_musical': 'electro',
+        'cache_eur': '750€'
+    },
+
+    {
+        'nombre': ' jose  garcia ',
+        'pais': ' españa ',
+        'genero_musical': 'ROCK',
+        'cache_eur': '1.500,50€'
+    }
+]
 
 
+# ====================================
+# AUDITORÍA INICIAL
+# ====================================
+
+print('\n====================')
+print('AUDITORÍA INICIAL')
+print('====================')
 
 
+vacios = contar_vacios(
+    artistas
+)
 
+print('\nVALORES VACÍOS')
 
-artistas_limpio = limpiar_artistas(artistas)
+for campo, cantidad in vacios.items():
 
-programa_limpio = limpiar_programa(programa)
-
-ventas_limpias = limpiar_ventas(ventas)
-
-patrocinadores_limpios = limpiar_patrocinadores(patrocinadores)
-
-correcciones = 0
-
-for artista in artistas:
-
-    nombre_original = artista["nombre"]
-
-    nombre_limpio = normalizar_texto(
-        nombre_original
+    print(
+        campo,
+        ':',
+        cantidad
     )
 
-    if nombre_original != nombre_limpio:
-        correcciones += 1
 
-    artista["nombre"] = nombre_limpio
+espacios = detectar_espacios_extra(
+    artistas
+)
 
-print("Correcciones:", correcciones)
+print('\nESPACIOS EXTRA')
+
+for campo, cantidad in espacios.items():
+
+    print(
+        campo,
+        ':',
+        cantidad
+    )
 
 
+duplicados = detectar_duplicados(
+    artistas,
+    'nombre'
+)
+
+print('\nDUPLICADOS')
+
+print(duplicados)
 
 
-# def normalizar_texto(texto):
-#     """
-#     Normaliza un texto aplicando limpieza, corrección de tildes y formato.
+formatos = contar_formatos(
+    artistas
+)
 
-#     La función realiza varias transformaciones sobre el texto recibido:
-#     - Limpia espacios y normaliza el formato utilizando `limpiar_texto()`.
-#     - Convierte el texto a minúsculas.
-#     - Corrige palabras según un diccionario de tildes.
-#     - Reconstruye el texto con la primera letra en mayúscula.
+print('\nFORMATOS')
 
-#     Parámetros:
-#         texto (str): Texto que se desea normalizar.
+for campo, cantidad in formatos.items():
 
-#     Retorna:
-#         str: Texto normalizado y corregido.
+    print(
+        campo,
+        ':',
+        cantidad
+    )
 
-#     Funcionamiento:
-#         - Limpia el texto mediante la función `limpiar_texto()`.
-#         - Convierte todo el texto a minúsculas.
-#         - Divide el texto en palabras.
-#         - Comprueba cada palabra en el diccionario `correcciones_tildes`.
-#         - Sustituye las palabras encontradas por su versión corregida.
-#         - Une nuevamente las palabras en una sola cadena.
-#         - Convierte la primera letra del texto a mayúscula.
 
-#     Ejemplos:
-#         Suponiendo el siguiente diccionario:
+# ====================================
+# LIMPIEZA
+# ====================================
 
-#         >>> correcciones_tildes = {
-#         ...     "camion": "camión",
-#         ...     "arbol": "árbol"
-#         ... }
+print('\n====================')
+print('LIMPIEZA')
+print('====================')
 
-#         >>> normalizar_texto("  CAMION rojo ")
-#         'Camión rojo'
 
-#         >>> normalizar_texto("ARBOL grande")
-#         'Árbol grande'
+for registro in artistas:
 
-#     Requisitos:
-#         - Debe existir previamente:
-#               - La función `limpiar_texto()`
-#               - El diccionario `correcciones_tildes`
-#         - `correcciones_tildes` debe contener pares:
-#               palabra_sin_tilde -> palabra_corregida
+    # ----------------
+    # NOMBRE
+    # ----------------
 
-#     Excepciones:
-#         IndexError:
-#             Puede producirse si el texto resultante está vacío y se intenta
-#             acceder a `texto[0]`.
+    registro['nombre'] = normalizar_texto(
+        registro['nombre']
+    )
 
-#     Notas:
-#         - Solo corrige palabras exactas presentes en el diccionario.
-#         - La capitalización final afecta únicamente a la primera letra
-#           del texto completo.
-#     """
-#     texto = limpiar_texto(texto)
-#     texto = texto.lower()
-#     palabras = texto.split()
-#     palabras_corregidas = []
+    # ----------------
+    # PAÍS
+    # ----------------
 
-#     for palabra in palabras:
-#         if palabra in correcciones_tildes:
-#             palabras_corregidas.append(correcciones_tildes[palabra])
-#         else:
-#             palabras_corregidas.append(palabra)
+    registro['pais'] = normalizar_texto(
+        registro['pais']
+    )
 
-#     texto = " ".join(palabras_corregidas)
-#     texto = texto[0].upper() + texto[1:]
+    # ----------------
+    # GÉNERO
+    # ----------------
 
-#     return texto
-    
-    
-#     mapeo_generos = {
-#     # Rock
-#     "rock":         "Rock",
-#     "rokc":         "Rock",
-#     "roc":          "Rock",
-#     "rock":         "Rock",
-#     "ROCK":         "Rock",
+    registro['genero_musical'] = normalizar_categoria(
+        registro['genero_musical'],
+        mapeo_generos
+    )
 
-#     # Electrónica
-#     "electro":      "Electrónica",
-#     "electronica":  "Electrónica",
-#     "Electronica":  "Electrónica",
-#     "ELECTRONICA":  "Electrónica",
-#     "Electrónica":  "Electrónica",
-#     "Electrónic":   "Electrónica",
+    # ----------------
+    # CACHÉ
+    # ----------------
 
-#     # Hip Hop
-#     "hip hop":      "Hip Hop",
-#     "hip-hop":      "Hip Hop",
-#     "Hip Hop":      "Hip Hop",
-#     "Hip-Hop":      "Hip Hop",
-#     "HIP HOP":      "Hip Hop",
-#     "HipHop":       "Hip Hop",
+    registro['cache_eur'] = limpiar_valor_numero(
+        registro['cache_eur']
+    )
 
-#     # Jazz
-#     "jazz":         "Jazz",
-#     "Jazz":         "Jazz",
-#     "JAZZ":         "Jazz",
-#     "Jaz":          "Jazz",
 
-#     # Metal
-#     "metal":        "Metal",
-#     "Metal":        "Metal",
-#     "METAL":        "Metal",
-#     "Metall":       "Metal",
+# ====================================
+# ELIMINAR DUPLICADOS
+# ====================================
 
-#     # Pop
-#     "pop":          "Pop",
-#     "Pop":          "Pop",
-#     "POP":          "Pop",
-#     "Ppo":          "Pop",
+artistas = eliminar_duplicados(
+    artistas,
+    ['nombre']
+)
 
-#     # R&B
-#     "r&b":          "R&B",
-#     "R&B":          "R&B",
-#     "R & B":        "R&B",
-#     "rnb":          "R&B",
-#     "RnB":          "R&B",
 
-#     # Reggaetón
-#     "reggaeton":    "Reggaetón",
-#     "Reggaeton":    "Reggaetón",
-#     "REGGAETON":    "Reggaetón",
-#     "Reggaetón":    "Reggaetón",
-#     "regueton":     "Reggaetón",
-#     "Reguetón":     "Reggaetón",
+# ====================================
+# RESULTADO FINAL
+# ====================================
 
-#     # Ska
-#     "ska":          "Ska",
-#     "Ska":          "Ska",
-#     "SKA":          "Ska",
+print('\n====================')
+print('DATOS LIMPIOS')
+print('====================')
 
-#     # Salsa
-#     "salsa":        "Salsa",
-#     "Salsa":        "Salsa",
-#     "SALSA":        "Salsa",
 
-#     # Techno
-#     "techno":       "Techno",
-#     "Techno":       "Techno",
-#     "TECHNO":       "Techno",
-#     "Tekno":        "Techno",
+for registro in artistas:
 
-#     # Flamenco
-#     "flamenco":     "Flamenco",
-#     "Flamenco":     "Flamenco",
-#     "FLAMENCO":     "Flamenco",
-#     "Flamenko":     "Flamenco",
-
-#     # Folk
-#     "folk":         "Folk",
-#     "Folk":         "Folk",
-#     "FOLK":         "Folk",
-
-#     # Indie
-#     "indie":        "Indie",
-#     "Indie":        "Indie",
-#     "INDIE":        "Indie",
-#     "Indy":         "Indie",
-
-#     # Cumbia
-#     "cumbia":       "Cumbia",
-#     "Cumbia":       "Cumbia",
-#     "CUMBIA":       "Cumbia",
-#     "Kunbia":       "Cumbia",
-# }
+    print(registro)
