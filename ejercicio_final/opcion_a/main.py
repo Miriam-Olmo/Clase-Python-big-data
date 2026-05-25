@@ -1,6 +1,3 @@
-# main.py
-
-
 # ====================================
 # IMPORTACIONES
 # ====================================
@@ -150,7 +147,7 @@ for registro in artistas:
     # CACHÉ
     # ----------------
 
-    registro['cache_eur'] = limpiar_valor_numero(
+    registro['cache_eur'] = limpiar_valor_numerico(
         registro['cache_eur']
     )
 
