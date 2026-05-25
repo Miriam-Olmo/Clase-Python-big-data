@@ -1,12 +1,6 @@
-# ==============================================================================
-# MÓDULO: lib/limpieza.py
-# OBJETIVO: Módulo de limpieza compuesto por funciones pequeñas y atómicas.
-# RESTRICCIÓN: Python puro. Prohibido el uso de librerías como 're' o 'pandas'.
-# ==============================================================================
-
-# ------------------------------------------------------------------------------
+# -----------------------------------------
 # DICCIONARIOS DE SOPORTE Y MAPEO
-# ------------------------------------------------------------------------------
+# -----------------------------------------
 
 correcciones_tildes = {
     "jose": "José", "maria": "María", "garcia": "García", "gonzalez": "González",
@@ -55,12 +49,12 @@ meses_maestros = {
 }
 
 
-# ------------------------------------------------------------------------------
-# FUNCIONES ATÓMICAS DE TEXTO (Fase 3)
-# ------------------------------------------------------------------------------
+# -----------------------------------------
+# FUNCIONES DE TEXTO
+# -----------------------------------------
 
 def limpiar_espacios(texto):
-    """Elimina espacios extremos y colapsa los dobles espacios intermedios."""
+    """Elimina espacios en los extremos y colapsa los dobles espacios intermedios."""
     if texto is None:
         return ""
     return " ".join(str(texto).split())
@@ -79,7 +73,6 @@ def corregir_palabra_tilde(palabra):
     if palabra_min in correcciones_tildes:
         return correcciones_tildes[palabra_min]
     
-    # Preserva mayúsculas intermedias internas (ej: DJ, MC, RockMedia) en lugar de usar .capitalize()
     if len(palabra) > 0:
         return palabra[0].upper() + palabra[1:]
     return palabra
@@ -95,9 +88,9 @@ def normalizar_texto(texto):
     return " ".join(palabras_corregidas)
 
 
-# ------------------------------------------------------------------------------
-# FUNCIONES ATÓMICAS DE NÚMEROS Y DIVISAS (Fase 4 y 8)
-# ------------------------------------------------------------------------------
+# -----------------------------------------
+# FUNCIONES DE NÚMEROS Y MONEDAS
+# -----------------------------------------
 
 def limpiar_simbolos_moneda(cadena):
     """Quita los caracteres de divisa y espacios en blanco internos."""
@@ -115,7 +108,7 @@ def unificar_separadores_decimales(cadena):
 
 
 def limpiar_valor_numerico(valor):
-    """Transforma de manera segura importes sucios a flotantes puros."""
+    """Transforma de manera segura importes sucios a float."""
     if valor is None or es_valor_vacio(str(valor)):
         return None
     
@@ -129,13 +122,14 @@ def limpiar_valor_numerico(valor):
         return None
 
 
-# ------------------------------------------------------------------------------
-# FUNCIONES ATÓMICAS DE IDENTIFICADORES Y FORMATOS ESPECÍFICOS
-# ------------------------------------------------------------------------------
+# -----------------------------------------
+# FUNCIONES DE IDENTIFICADORES Y FORMATOS ESPECÍFICOS
+# -----------------------------------------
 
 def limpiar_id(identificador):
     """Estandariza códigos de identificación a minúsculas sin espacios."""
-    if valor is None or es_valor_vacio(str(identificador)):
+    # CORREGIDO: Se cambia 'valor' por 'identificador'
+    if identificador is None or es_valor_vacio(str(identificador)):
         return "SIN DATOS"
     return str(identificador).strip().lower()
 
@@ -148,7 +142,7 @@ def limpiar_dni(dni):
     dni_limpio = str(dni).strip().upper()
     dni_formateado = dni_limpio.zfill(9)  # Asegura longitud de 9
     
-    # Comprobación de estructura sin 're' (8 números y 1 letra)
+    # Comprobación de estructura 
     parte_num = dni_formateado[:8]
     parte_letra = dni_formateado[-1]
     
@@ -173,9 +167,9 @@ def normalizar_categoria(valor, diccionario_mapeo, campo_nombre="categoria"):
     return valor
 
 
-# ------------------------------------------------------------------------------
-# FUNCIONES ATÓMICAS DE TRATAMIENTO DE FECHAS (Fase 6)
-# ------------------------------------------------------------------------------
+# ------------------------------------------
+# FUNCIONES DE TRATAMIENTO DE FECHAS 
+#------------------------------------------
 
 def formato_texto_largo(cadena):
     """Procesa formato: 'DD de mes de AAAA' (ej. 15 de julio de 2026)."""
@@ -242,7 +236,18 @@ def formato_barras(cadena):
 
 
 def normalizar_fecha(fecha_texto):
-    """Función unificadora que enruta la cadena hacia su analizador correspondiente."""
+    """Función unificadora que enruta la cadena hacia su analizador correspondiente.
+    
+    Construye y devuelve una cadena de texto (un string) que representa una fecha 
+    con el formato estandarizado Día/Mes/Año.
+    
+    El truco de magia: :02d
+    Tanto en {dia:02d} como en {mes:02d}, estamos aplicando un formateo especial 
+    a los números enteros. Si lo dividimos en tres partes:
+      - d: Indica que la variable que hay dentro es un entero (decimal integer).
+      - 2: Indica el ancho mínimo que debe tener el texto resultante (2 caracteres).
+      - 0: Indica con qué carácter queremos rellenar el espacio vacío (con ceros).
+    """
     if fecha_texto is None or es_valor_vacio(str(fecha_texto)):
         return "FECHA INVÁLIDA"
         
@@ -262,17 +267,6 @@ def normalizar_fecha(fecha_texto):
     if dia is not None and mes is not None and anio is not None:
         if 1 <= dia <= 31 and 1 <= mes <= 12 and anio > 0:
             return f"{dia:02d}/{mes:02d}/{anio}"
-        """ 
-        construye y devolver una cadena de texto (un string) que representa una fecha con el formato estandarizado Día/Mes/Año
-
-        El truco de magia: :02d
-        Tanto en {dia:02d} como en {mes:02d}, estamos aplicando un formateo especial a los números enteros. Si lo dividimos en tres partes:
-
-        d: Indica que la variable que hay dentro es un entero (un número dígito o decimal integer en inglés).
-
-        2: Indica el ancho mínimo que debe tener el texto resultante. Queremos que ocupe, al menos, 2 caracteres.
-
-        0: Indica con qué carácter queremos rellenar el espacio vacío si el número no llega a ese ancho mínimo de 2. En este caso, con ceros."""
             
     print(f"AVISO: Estructura de fecha no reconocida → '{fecha_texto}'")
     return "FECHA INVÁLIDA"
