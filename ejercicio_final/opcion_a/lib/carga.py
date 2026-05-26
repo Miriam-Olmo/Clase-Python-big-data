@@ -11,7 +11,7 @@ def cargar_csv(ruta):
     return artistas
 
 def cargar_excel(ruta):
-    excel = load_workbook(ruta)
+    excel = load_workbook(ruta, data_only=True)
     hoja = excel.active
     
     filas = hoja.iter_rows(values_only=True)
@@ -19,8 +19,10 @@ def cargar_excel(ruta):
     
     lista_resultante = []
     for fila in hoja.iter_rows(min_row=2, values_only=True):
-        producto = dict(zip(cabeceras, fila))
-        lista_resultante.append(producto)
+        if not any(fila):# Evita almacenar líneas huérfanas o vacías
+            continue
+        resultado = dict(zip(cabeceras, fila))
+        lista_resultante.append(resultado)
        
     return lista_resultante
 
@@ -31,8 +33,8 @@ def cargar_json(ruta):
     return datos
 
 def cargar_xml(ruta):
-    arbol = et.parse(ruta)
-    nodo_raiz = arbol.getroot()
+    fichero = et.parse(ruta)
+    nodo_raiz = fichero.getroot()
 
     patrocinadores = []
     for patrocinador in nodo_raiz.findall('patrocinador'):

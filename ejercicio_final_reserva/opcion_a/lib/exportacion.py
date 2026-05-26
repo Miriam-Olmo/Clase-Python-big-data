@@ -1,109 +1,318 @@
-# creacion de carpeta datos limpios con csv, excel, json,xml
-import os
-from openpyxl import Workbook
+# ============================================
+# LIB/EXPORTACION.PY
+# ============================================
+
 import csv
 
+from openpyxl import Workbook
 
+# ============================================
+# EXPORTAR CSV
+# ============================================
 
-def crear_csv(lista, nombre, carpeta):
-    """Genera un archivo CSV individual por cada fichero original"""
-    os.makedirs(carpeta, exist_ok=True)
-    
-    fichero = open(f"./{carpeta}/{nombre}", 'w', encoding='UTF-8', newline='')
-    
-    if lista:
-        # Extraemos las cabeceras de las llaves del diccionario
-        cabeceras = list(lista[0].keys())
-        
-        mi_csv = csv.DictWriter(fichero, fieldnames=cabeceras)
-        mi_csv.writeheader()
-        
-        # escribe todas las filas con los datos limpios
-        mi_csv.writerows(lista)
-        
-    fichero.close()
-    print(f"✔ Archivo CSV '{nombre}' guardado correctamente en ./{carpeta}")
+def exportar_csv(
+    lista_datos,
+    ruta_archivo
+):
 
+    if len(lista_datos) == 0:
 
+        return
 
-def crear_excel_completo(diccionario_de_datos, carpeta, nombre_archivo="datos_completos"):
-    # 1. Creamos la carpeta si no existe
-    os.makedirs(carpeta, exist_ok=True)
-    
-    # 2. Ruta completa con la extensión .xlsx
-    ruta_completa = f"./{carpeta}/{nombre_archivo}.xlsx"
-    
-    # 3. Creamos el archivo Excel
-    excel = Workbook()
-    
-    # Grabamos la hoja que viene
-    hoja_activa = excel.active
-    primer_fichero = True
-    
-    # 4. Recorremos el diccionario para crear cada pestaña de forma automática
-    for nombre_pestaña, lista_datos in diccionario_de_datos.items():
-        
-        if primer_fichero:
-            # Para el primer fichero, usamos la hoja por defecto y le cambiamos el nombre
-            hoja_actual = hoja_activa
-            hoja_actual.title = nombre_pestaña
-            primer_fichero = False # Cambiamos el interruptor
-        else:
-            # Para los siguientes ficheros, creamos una pestaña nueva con su nombre correcto
-            hoja_actual = excel.create_sheet(title=nombre_pestaña)
-        
-        # 5. Si la lista tiene datos, los metemos SOLAMENTE en la hoja de esta vuelta
-        if lista_datos:
-            # Ponemos las cabeceras (las llaves del primer diccionario)
-            cabeceras = list(lista_datos[0].keys())
-            hoja_actual.append(cabeceras)
-            
-            # Ponemos los datos fila por fila
-            for registro in lista_datos:
-                valores_fila = list(registro.values())
-                hoja_actual.append(valores_fila)
-                
-    # 6. Guardamos el archivo físico con todas sus hojas dentro
-    excel.save(ruta_completa)
-    print(f"Excel creado correctamente en: {ruta_completa}")
+    archivo = open(
 
+        ruta_archivo,
 
-def crear_informe_txt(carpeta, nombre_archivo="informe_limpieza.txt"):
-    """Crea e imprime por pantalla el informe final estático exigido (Fase 10)"""
-    os.makedirs(carpeta, exist_ok=True)
-    ruta_completa = f"./{carpeta}/{nombre_archivo}"
-    
-    # Texto plano exacto requerido por la plantilla de tu enunciado
-    texto_informe = """=== INFORME DE LIMPIEZA ===
-Fecha del proceso: 26/05/2026
-Ficheros procesados: 4
+        mode="w",
 
---- RESUMEN POR FICHERO ---
-artistas.csv:
-  Registros originales: 250 | Registros finales: 231
-  Duplicados eliminados: 15
-  Valores vacíos tratados: 47
-  Categorías normalizadas: 89
-  Fechas convertidas: 0  (sin fechas en este fichero)
-  Valores fuera de rango corregidos: 5
+        newline="",
 
---- VALIDACIÓN CRUZADA ---
-  Inconsistencias resueltas automáticamente: 12
-  Registros marcados como REVISAR: 3
+        encoding="utf-8"
+    )
 
---- AVISOS (requieren atención humana) ---
-  REVISAR MANUALMENTE (fuera de rango): 2 casos
-  REVISAR (sin referencia en fichero maestro): 3 casos
-    · partidas.json, registro 47: equipo = 'Arctic Fxoes'
-"""
-    
-    # 1. Imprimir por pantalla (Requisito)
-    print("\n" + "="*50)
-    print(texto_informe)
-    print("="*50 + "\n")
-    
-    # 2. Guardar en el fichero txt usando open (Requisito)
-    fichero = open(ruta_completa, 'w', encoding='utf-8')
-    fichero.write(texto_informe)
-    fichero.close()
-    print(f"✔ Archivo de texto '{nombre_archivo}' generado correctamente.")
+    try:
+
+        escritor_csv = csv.DictWriter(
+
+            archivo,
+
+            fieldnames=lista_datos[0].keys()
+        )
+
+        escritor_csv.writeheader()
+
+        escritor_csv.writerows(
+            lista_datos
+        )
+
+    finally:
+
+        archivo.close()
+
+# ============================================
+# CREAR LIBRO EXCEL
+# ============================================
+
+def crear_libro_excel():
+
+    return Workbook()
+
+# ============================================
+# ELIMINAR HOJA VACÍA
+# ============================================
+
+def eliminar_hoja_inicial(
+    libro_excel
+):
+
+    hoja_inicial = libro_excel.active
+
+    libro_excel.remove(
+        hoja_inicial
+    )
+
+# ============================================
+# CREAR HOJA
+# ============================================
+
+def crear_hoja_excel(
+    libro_excel,
+    nombre_hoja
+):
+
+    return libro_excel.create_sheet(
+        title=nombre_hoja
+    )
+
+# ============================================
+# OBTENER COLUMNAS
+# ============================================
+
+def obtener_columnas(
+    lista_datos
+):
+
+    return list(
+        lista_datos[0].keys()
+    )
+
+# ============================================
+# ESCRIBIR COLUMNAS
+# ============================================
+
+def escribir_columnas_excel(
+    hoja_excel,
+    columnas
+):
+
+    hoja_excel.append(
+        columnas
+    )
+
+# ============================================
+# ESCRIBIR FILAS
+# ============================================
+
+def escribir_filas_excel(
+    hoja_excel,
+    lista_datos,
+    columnas
+):
+
+    for fila in lista_datos:
+
+        valores_fila = []
+
+        for columna in columnas:
+
+            valores_fila.append(
+                fila[columna]
+            )
+
+        hoja_excel.append(
+            valores_fila
+        )
+
+# ============================================
+# EXPORTAR EXCEL
+# ============================================
+
+def exportar_excel(
+    diccionario_datos,
+    ruta_archivo
+):
+
+    libro_excel = crear_libro_excel()
+
+    eliminar_hoja_inicial(
+        libro_excel
+    )
+
+    for nombre_hoja, lista_datos in diccionario_datos.items():
+
+        hoja_excel = crear_hoja_excel(
+
+            libro_excel,
+
+            nombre_hoja
+        )
+
+        if len(lista_datos) == 0:
+
+            continue
+
+        columnas = obtener_columnas(
+            lista_datos
+        )
+
+        escribir_columnas_excel(
+
+            hoja_excel,
+
+            columnas
+        )
+
+        escribir_filas_excel(
+
+            hoja_excel,
+
+            lista_datos,
+
+            columnas
+        )
+
+    libro_excel.save(
+        ruta_archivo
+    )
+
+# ============================================
+# ESCRIBIR INFORMACIÓN
+# ============================================
+
+def escribir_linea(
+    archivo,
+    texto
+):
+
+    archivo.write(
+        texto + "\n"
+    )
+
+# ============================================
+# EXPORTAR INFORME
+# ============================================
+
+def guardar_informe(
+    auditorias
+):
+
+    archivo = open(
+
+        "datos_limpios/informe_limpieza.txt",
+
+        mode="w",
+
+        encoding="utf-8"
+    )
+
+    try:
+
+        escribir_linea(
+            archivo,
+            "=================================="
+        )
+
+        escribir_linea(
+            archivo,
+            "INFORME DE LIMPIEZA DE DATOS"
+        )
+
+        escribir_linea(
+            archivo,
+            "=================================="
+        )
+
+        escribir_linea(
+            archivo,
+            ""
+        )
+
+        for nombre_archivo, auditoria in auditorias.items():
+
+            escribir_linea(
+                archivo,
+                f"ARCHIVO: {nombre_archivo}"
+            )
+
+            escribir_linea(
+                archivo,
+                f"TOTAL REGISTROS: "
+                f"{auditoria['total_registros']}"
+            )
+
+            escribir_linea(
+                archivo,
+                f"DUPLICADOS: "
+                f"{auditoria['duplicados']}"
+            )
+
+            escribir_linea(
+                archivo,
+                ""
+            )
+
+            escribir_linea(
+                archivo,
+                "VALORES VACÍOS:"
+            )
+
+            for campo, cantidad in auditoria[
+                "valores_vacios"
+            ].items():
+
+                escribir_linea(
+
+                    archivo,
+
+                    f"{campo}: {cantidad}"
+                )
+
+            escribir_linea(
+                archivo,
+                ""
+            )
+
+            escribir_linea(
+                archivo,
+                "ESPACIOS EXTRA:"
+            )
+
+            for campo, cantidad in auditoria[
+                "espacios_extra"
+            ].items():
+
+                escribir_linea(
+
+                    archivo,
+
+                    f"{campo}: {cantidad}"
+                )
+
+            escribir_linea(
+                archivo,
+                ""
+            )
+
+            escribir_linea(
+                archivo,
+                "----------------------------------"
+            )
+
+            escribir_linea(
+                archivo,
+                ""
+            )
+
+    finally:
+
+        archivo.close()

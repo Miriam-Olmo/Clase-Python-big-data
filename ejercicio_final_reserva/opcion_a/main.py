@@ -1,92 +1,363 @@
-from lib.carga import cargar_csv, cargar_excel, cargar_json, cargar_xml
-from lib.limpieza import eliminar_duplicados, contar_vacios
-from lib.auditoria import auditar_fichero
-from lib.exportacion import crear_csv,crear_excel_completo
+# ============================================
+# MAIN.PY
+# ============================================
 
-def main():
-    print("==== INFORME PRACTICA FINAL ====")
-    try:
-        # cargamos los archivos(fase de carga)
-        artistas =cargar_csv('datos/artistas.csv')
-        programa = cargar_excel('datos/escenarios_horarios.xlsx')
-        patrocinadores = cargar_xml('datos/patrocinadores.xml')
-        ventas = cargar_json('datos/ventas_entradas.json')
-        print("✔ ¡Todos los ficheros cargados correctamente en memoria!\n")
-    except Exception as e:
-        print(f"❌ Error crítico al cargar los archivos: {e}") # Al poner {e} dentro del print, estás obligando a Python a que te muestre en la consola la razón exacta por la cual falló el programa, pero de una forma controlada y limpia.
-        return
-    
-    
-    # auditoria inicial antes de la limpieza
-    auditar_fichero(artistas)
-    auditar_fichero(programa)
-    auditar_fichero(patrocinadores)
-    auditar_fichero(ventas)
+from lib.carga import cargar_csv
+from lib.carga import cargar_excel
+from lib.carga import cargar_json
+from lib.carga import cargar_xml
 
-    print("\n✔ Auditoría inicial completada.")
-    print("Presiona Enter para proceder con las fases de limpieza y depuración...")
-    input()  # Pausa estética para leer el reporte en consola antes de continuar
+from lib.auditoria import auditar_datos
 
-    # limpiamos los archivos(fase de limpieza)
-    artistas_limpios = eliminar_duplicados(artistas) and contar_vacios(artistas)
-    programa_limpio = eliminar_duplicados(programa) and contar_vacios(programa)
-    patrocinadores_limpios = eliminar_duplicados(patrocinadores) and contar_vacios(patrocinadores)
-    ventas_limpias = eliminar_duplicados(ventas) and contar_vacios(ventas)
+from lib.limpieza import normalizar_texto
+from lib.limpieza import normalizar_categoria
+from lib.limpieza import limpiar_valor_numerico
+from lib.limpieza import normalizar_fecha
+from lib.limpieza import eliminar_duplicados
 
-    print("✔ Registros duplicados eliminados e integridad analizada.")
+from lib.exportacion import exportar_csv
+from lib.exportacion import exportar_excel
+from lib.exportacion import guardar_informe
 
-    # exportamos y hacemos el informe final 
+# ============================================
+# LIMPIAR ARTISTAS
+# ============================================
 
-    print( 'generando archivos csv limpios')
-    crear_csv(artistas_limpios, 'artistas_limpios.csv', 'datos_limpios')
-    crear_csv(programa_limpio, 'escenarios_horarios_limpios.csv', 'datos_limpios')
-    crear_csv(patrocinadores_limpios, 'patrocinadores_limpios.csv', 'datos_limpios')
-    crear_csv(ventas_limpias, 'ventas_entradas_limpias.csv', 'datos_limpios')
+def limpiar_artistas(
+    lista_artistas
+):
 
-    datos_excel = {
-        artistas_limpios: 'artistas_limpios',
-        programa_limpio: 'programa_limpio',
-        patrocinadores_limpios: 'patrocinadores_limpios',
-        ventas_limpias: 'ventas_limpias'
-    }
-    crear_excel_completo(datos_excel, 'datos_limpios', 'datos_completos.xlsx')
+    for artista in lista_artistas:
 
+        if "nombre" in artista:
 
-    texto_informe = """=== INFORME DE LIMPIEZA ===
-Fecha del proceso: 26/05/2026
-Ficheros procesados: 4
+            artista["nombre"] = normalizar_texto(
+                artista["nombre"]
+            )
 
---- RESUMEN POR FICHERO ---
-artistas.csv:
-  Registros originales: 250 | Registros finales: 231
-  Duplicados eliminados: 15
-  Valores vacíos tratados: 47
-  Categorías normalizadas: 89
-  Fechas convertidas: 0  (sin fechas en este fichero)
-  Valores fuera de rango corregidos: 5
+        if "pais" in artista:
 
---- VALIDACIÓN CRUZADA ---
-  Inconsistencias resueltas automáticamente: 12
-  Registros marcados como REVISAR: 3
+            artista["pais"] = normalizar_categoria(
+                artista["pais"],
+                "pais"
+            )
 
---- AVISOS (requieren atención humana) ---
-  REVISAR MANUALMENTE (fuera de rango): 2 casos
-  REVISAR (sin referencia en fichero maestro): 3 casos
-    · partidas.json, registro 47: equipo = 'Arctic Fxoes'
-"""
+        if "genero_musical" in artista:
 
-    print('\n'+ '='*50)
-    print(texto_informe)
-    print('='*50 + '\n')
-    ruta_informe = (f"{'datos_limpios'}/informe_limpieza.txt")
-    fichero_txt = open(ruta_informe, 'w', encoding='UTF-8')
-    fichero_txt.write(texto_informe)
-    fichero_txt.close()
+            artista["genero_musical"] = normalizar_categoria(
+                artista["genero_musical"],
+                "genero_musical"
+            )
 
-    print (f"archivo de texto '{ruta_informe} generado con exito")
-    print('\n' + '='*50)
-    print("✔ ¡PROCESO DE DATOS FINALIZADO CON COMPLETO ÉXITO!")
-    print('=' + '\n')
+        if "cache_eur" in artista:
 
-if __name__ == "__main__":
-    main()
+            artista["cache_eur"] = limpiar_valor_numerico(
+                artista["cache_eur"]
+            )
+
+    if len(lista_artistas) > 0:
+
+        if "nombre" in lista_artistas[0]:
+
+            lista_artistas = eliminar_duplicados(
+
+                lista_artistas,
+
+                ["nombre"]
+            )
+
+    return lista_artistas
+
+# ============================================
+# LIMPIAR CONCIERTOS
+# ============================================
+
+def limpiar_conciertos(
+    lista_conciertos
+):
+
+    for concierto in lista_conciertos:
+
+        if "fecha" in concierto:
+
+            concierto["fecha"] = normalizar_fecha(
+                concierto["fecha"]
+            )
+
+        if "escenario" in concierto:
+
+            concierto["escenario"] = normalizar_categoria(
+                concierto["escenario"],
+                "escenario"
+            )
+
+    if len(lista_conciertos) > 0:
+
+        if (
+
+            "artista" in lista_conciertos[0]
+
+            and
+
+            "fecha" in lista_conciertos[0]
+        ):
+
+            lista_conciertos = eliminar_duplicados(
+
+                lista_conciertos,
+
+                ["artista", "fecha"]
+            )
+
+    return lista_conciertos
+
+# ============================================
+# LIMPIAR ENTRADAS
+# ============================================
+
+def limpiar_entradas(
+    lista_entradas
+):
+
+    for entrada in lista_entradas:
+
+        if "tipo_entrada" in entrada:
+
+            entrada["tipo_entrada"] = normalizar_categoria(
+                entrada["tipo_entrada"],
+                "tipo_entrada"
+            )
+
+        if "precio" in entrada:
+
+            entrada["precio"] = limpiar_valor_numerico(
+                entrada["precio"]
+            )
+
+        if "fecha_compra" in entrada:
+
+            entrada["fecha_compra"] = normalizar_fecha(
+                entrada["fecha_compra"]
+            )
+
+        if "metodo_pago" in entrada:
+
+            entrada["metodo_pago"] = normalizar_categoria(
+                entrada["metodo_pago"],
+                "metodo_pago"
+            )
+
+    if len(lista_entradas) > 0:
+
+        if "id_entrada" in lista_entradas[0]:
+
+            lista_entradas = eliminar_duplicados(
+
+                lista_entradas,
+
+                ["id_entrada"]
+            )
+
+    return lista_entradas
+
+# ============================================
+# LIMPIAR PATROCINADORES
+# ============================================
+
+def limpiar_patrocinadores(
+    lista_patrocinadores
+):
+
+    for patrocinador in lista_patrocinadores:
+
+        if "nombre" in patrocinador:
+
+            patrocinador["nombre"] = normalizar_texto(
+                patrocinador["nombre"]
+            )
+
+        if "categoria" in patrocinador:
+
+            patrocinador["categoria"] = normalizar_categoria(
+                patrocinador["categoria"],
+                "categoria"
+            )
+
+        if "aportacion" in patrocinador:
+
+            patrocinador["aportacion"] = limpiar_valor_numerico(
+                patrocinador["aportacion"]
+            )
+
+    if len(lista_patrocinadores) > 0:
+
+        if "nombre" in lista_patrocinadores[0]:
+
+            lista_patrocinadores = eliminar_duplicados(
+
+                lista_patrocinadores,
+
+                ["nombre"]
+            )
+
+    return lista_patrocinadores
+
+# ============================================
+# CARGAR DATOS
+# ============================================
+
+artistas = cargar_csv(
+    "./datos/artistas.csv"
+)
+
+conciertos = cargar_excel(
+    "./datos/escenarios_horarios.xlsx"
+)
+
+patrocinadores = cargar_xml(
+    "./datos/patrocinadores.xml"
+)
+
+entradas = cargar_json(
+    "./datos/ventas_entradas.json"
+)
+
+# ============================================
+# AUDITORÍA ANTES DE LIMPIAR
+# ============================================
+
+auditoria_artistas = auditar_datos(
+    artistas,
+    "artistas.csv"
+)
+
+auditoria_conciertos = auditar_datos(
+    conciertos,
+    "escenarios_horarios.xlsx"
+)
+
+auditoria_patrocinadores = auditar_datos(
+    patrocinadores,
+    "patrocinadores.xml"
+)
+
+auditoria_entradas = auditar_datos(
+    entradas,
+    "ventas_entradas.json"
+)
+
+# ============================================
+# LIMPIEZA
+# ============================================
+
+artistas_limpios = limpiar_artistas(
+    artistas
+)
+
+conciertos_limpios = limpiar_conciertos(
+    conciertos
+)
+
+patrocinadores_limpios = limpiar_patrocinadores(
+    patrocinadores
+)
+
+entradas_limpias = limpiar_entradas(
+    entradas
+)
+
+# ============================================
+# CREAR CARPETA DATOS_LIMPIOS
+# ============================================
+
+import os
+
+os.makedirs(
+    "./datos_limpios",
+    exist_ok=True
+)
+
+# ============================================
+# EXPORTAR CSV LIMPIOS
+# ============================================
+
+exportar_csv(
+
+    artistas_limpios,
+
+    "./datos_limpios/artistas_limpios.csv"
+)
+
+exportar_csv(
+
+    conciertos_limpios,
+
+    "./datos_limpios/conciertos_limpios.csv"
+)
+
+exportar_csv(
+
+    patrocinadores_limpios,
+
+    "./datos_limpios/patrocinadores_limpios.csv"
+)
+
+exportar_csv(
+
+    entradas_limpias,
+
+    "./datos_limpios/entradas_limpias.csv"
+)
+
+# ============================================
+# EXPORTAR EXCEL GENERAL
+# ============================================
+
+datos_finales = {
+
+    "Artistas": artistas_limpios,
+
+    "Conciertos": conciertos_limpios,
+
+    "Patrocinadores": patrocinadores_limpios,
+
+    "Entradas": entradas_limpias
+}
+
+exportar_excel(
+
+    datos_finales,
+
+    "./datos_limpios/festival_limpio.xlsx"
+)
+
+# ============================================
+# GUARDAR INFORME
+# ============================================
+
+auditorias = {
+
+    "artistas.csv": auditoria_artistas,
+
+    "escenarios_horarios.xlsx": auditoria_conciertos,
+
+    "patrocinadores.xml": auditoria_patrocinadores,
+
+    "ventas_entradas.json": auditoria_entradas
+}
+
+guardar_informe(
+    auditorias
+)
+
+# ============================================
+# FINAL
+# ============================================
+
+print(
+    "\nPROCESO COMPLETADO"
+)
+
+print(
+    "Datos limpios exportados correctamente"
+)

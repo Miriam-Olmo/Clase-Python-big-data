@@ -1,52 +1,161 @@
+# ============================================
+# LIB/CARGA.PY
+# ============================================
+
 import csv
 import json
-import xml.etree.ElementTree as et
+
+import xml.etree.ElementTree as ElementTree
+
 from openpyxl import load_workbook
 
-def cargar_csv(ruta):
-    fichero = open(ruta, "r", encoding='UTF-8')
-    lector = csv.DictReader(fichero) 
-    artistas = list(lector)
-    fichero.close()
-    return artistas
+# ============================================
+# CARGAR CSV
+# ============================================
 
-def cargar_excel(ruta):
-    excel = load_workbook(ruta)
-    hoja = excel.active
-    
-    filas = hoja.iter_rows(values_only=True)
-    cabeceras = next(filas)
-    
-    lista_resultante = []
-    for fila in hoja.iter_rows(min_row=2, values_only=True):
-        producto = dict(zip(cabeceras, fila))
-        lista_resultante.append(producto)
-       
-    return lista_resultante
+def cargar_csv(ruta_archivo):
 
-def cargar_json(ruta):
-    fichero = open(ruta, "r", encoding="UTF-8")
-    datos = json.load(fichero)
-    fichero.close()
-    return datos
+    lista_registros = []
 
-def cargar_xml(ruta):
-    arbol = et.parse(ruta)
-    nodo_raiz = arbol.getroot()
+    archivo = open(
+        ruta_archivo,
+        mode="r",
+        encoding="utf-8"
+    )
 
-    patrocinadores = []
-    for patrocinador in nodo_raiz.findall('patrocinador'):
-        datos_patrocinador = {
-            'nombre_empresa': patrocinador.find('nombre_empresa').text,
-            'contacto': patrocinador.find('contacto').text,
-            'email': patrocinador.find('email').text,
-            'importe_patrocinio': patrocinador.find('importe_patrocinio').text,
-            'categoria': patrocinador.find('categoria').text,
-            'fecha_inicio': patrocinador.find('fecha_inicio').text,
-            'fecha_fin': patrocinador.find('fecha_fin').text
-        }
-        patrocinadores.append(datos_patrocinador)
-        
-    return patrocinadores
+    try:
 
+        lector_csv = csv.DictReader(
+            archivo
+        )
 
+        for fila in lector_csv:
+
+            lista_registros.append(
+                dict(fila)
+            )
+
+    finally:
+
+        archivo.close()
+
+    return lista_registros
+
+# ============================================
+# CARGAR EXCEL
+# ============================================
+
+def cargar_excel(
+    ruta_archivo,
+    nombre_hoja=None
+):
+
+    lista_registros = []
+
+    libro_excel = load_workbook(
+        ruta_archivo
+    )
+
+    if nombre_hoja is not None:
+
+        hoja_excel = libro_excel[
+            nombre_hoja
+        ]
+
+    else:
+
+        hoja_excel = libro_excel.active
+
+    encabezados = [
+
+        celda.value
+
+        for celda in hoja_excel[1]
+    ]
+
+    for fila in hoja_excel.iter_rows(
+
+        min_row=2,
+
+        values_only=True
+    ):
+
+        diccionario_fila = dict(
+
+            zip(
+                encabezados,
+                fila
+            )
+        )
+
+        lista_registros.append(
+            diccionario_fila
+        )
+
+    return lista_registros
+
+# ============================================
+# CARGAR JSON
+# ============================================
+
+def cargar_json(ruta_archivo):
+
+    archivo = open(
+        ruta_archivo,
+        mode="r",
+        encoding="utf-8"
+    )
+
+    try:
+
+        lista_registros = json.load(
+            archivo
+        )
+
+    finally:
+
+        archivo.close()
+
+    return lista_registros
+
+# ============================================
+# CARGAR XML
+# ============================================
+
+def cargar_xml(ruta_archivo):
+
+    lista_registros = []
+
+    archivo = open(
+        ruta_archivo,
+        mode="r",
+        encoding="utf-8"
+    )
+
+    try:
+
+        arbol_xml = ElementTree.parse(
+            archivo
+        )
+
+        raiz_xml = arbol_xml.getroot()
+
+        for elemento in raiz_xml:
+
+            registro = {}
+
+            for campo in elemento:
+
+                registro[
+                    campo.tag
+                ] = campo.text
+
+            lista_registros.append(
+                registro
+            )
+
+    finally:
+
+        archivo.close()
+
+    return lista_registros

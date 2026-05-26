@@ -1,305 +1,559 @@
-# -----------------------------------------
-# DICCIONARIOS DE SOPORTE Y MAPEO
-# -----------------------------------------
+# ============================================
+# LIB/LIMPIEZA.PY
+# ============================================
+
+# ============================================
+# CORRECCIONES DE TILDES
+# ============================================
 
 correcciones_tildes = {
-    "jose": "José", "maria": "María", "garcia": "García", "gonzalez": "González",
-    "martinez": "Martínez", "lopez": "López", "perez": "Pérez", "sanchez": "Sánchez",
-    "gomez": "Gómez", "fernandez": "Fernández", "rodriguez": "Rodríguez", 
-    "hernandez": "Hernández", "ramirez": "Ramírez", "gutierrez": "Gutiérrez"
+
+    "jose": "José",
+    "maria": "María",
+
+    "garcia": "García",
+    "gonzalez": "González",
+    "martinez": "Martínez",
+
+    "lopez": "López",
+    "perez": "Pérez",
+    "sanchez": "Sánchez",
+
+    "gomez": "Gómez",
+    "fernandez": "Fernández",
+    "rodriguez": "Rodríguez",
+
+    "hernandez": "Hernández",
+    "ramirez": "Ramírez",
+    "gutierrez": "Gutiérrez"
 }
 
+# ============================================
+# MAPEOS DE CATEGORÍAS
+# ============================================
+
 mapeos_categorias = {
+
     "genero_musical": {
-        "rock": "Rock", "rokc": "Rock", "roc": "Rock",
-        "electro": "Electrónica", "electronica": "Electrónica", "electrónica": "Electrónica", "electrónic": "Electrónica",
-        "hip hop": "Hip Hop", "hip-hop": "Hip Hop", "hiphop": "Hip Hop",
-        "jazz": "Jazz", "jaz": "Jazz", "metal": "Metal", "metall": "Metal",
-        "pop": "Pop", "ppo": "Pop", "r&b": "R&B", "r & b": "R&B", "rnb": "R&B",
-        "reggaeton": "Reggaetón", "regueton": "Reggaetón", "reguetón": "Reggaetón",
-        "ska": "Ska", "salsa": "Salsa", "techno": "Techno", "tekno": "Techno",
-        "flamenco": "Flamenco", "flamenko": "Flamenco", "folk": "Folk",
-        "indie": "Indie", "indy": "Indie", "cumbia": "Cumbia", "kunbia": "Cumbia"
+
+        "rock": "Rock",
+        "rokc": "Rock",
+
+        "electro": "Electrónica",
+        "electronica": "Electrónica",
+
+        "pop": "Pop",
+
+        "hip hop": "Hip Hop",
+
+        "jazz": "Jazz"
     },
+
     "pais": {
-        "españa": "España", "espana": "España", "spain": "España",
-        "usa": "Estados Unidos", "united states": "Estados Unidos", "uk": "Reino Unido"
+
+        "espana": "España",
+        "españa": "España",
+        "spain": "España",
+
+        "usa": "Estados Unidos",
+
+        "uk": "Reino Unido"
     },
+
     "escenario": {
-        "escenario principal": "Escenario Principal", "principal": "Escenario Principal",
-        "escenario 2": "Escenario Secundario", "secundario": "Escenario Secundario",
+
+        "escenario principal": "Escenario Principal",
+
+        "principal": "Escenario Principal",
+
+        "escenario 2": "Escenario Secundario",
+
+        "secundario": "Escenario Secundario",
+
         "carpa techno": "Carpa Techno"
     },
+
     "tipo_entrada": {
-        "general": "General", "vip": "VIP", "early bird": "Early Bird", "abono": "Abono Completo"
+
+        "general": "General",
+
+        "vip": "VIP",
+
+        "early bird": "Early Bird",
+
+        "abono": "Abono Completo"
     },
+
     "metodo_pago": {
-        "tarjeta": "Tarjeta", "credit card": "Tarjeta", "paypal": "PayPal", "efectivo": "Efectivo"
+
+        "tarjeta": "Tarjeta",
+
+        "credit card": "Tarjeta",
+
+        "paypal": "PayPal",
+
+        "efectivo": "Efectivo"
     },
+
     "categoria": {
-        "main sponsor": "Principal", "principal": "Principal", "colaborador": "Colaborador", "partner": "Colaborador"
+
+        "main sponsor": "Principal",
+
+        "principal": "Principal",
+
+        "colaborador": "Colaborador",
+
+        "partner": "Colaborador"
     }
 }
 
+# ============================================
+# MESES MAESTROS
+# ============================================
+
 meses_maestros = {
-    "enero": 1, "febrero": 2, "marzo": 3, "abril": 4, "mayo": 5, "junio": 6,
-    "julio": 7, "agosto": 8, "septiembre": 9, "octubre": 10, "noviembre": 11, "diciembre": 12,
-    "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
-    "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12
+
+    "enero": 1,
+    "febrero": 2,
+    "marzo": 3,
+    "abril": 4,
+    "mayo": 5,
+    "junio": 6,
+
+    "julio": 7,
+    "agosto": 8,
+    "septiembre": 9,
+    "octubre": 10,
+    "noviembre": 11,
+    "diciembre": 12,
+
+    "jan": 1,
+    "feb": 2,
+    "mar": 3,
+    "apr": 4,
+    "may": 5,
+    "jun": 6,
+
+    "jul": 7,
+    "aug": 8,
+    "sep": 9,
+    "oct": 10,
+    "nov": 11,
+    "dec": 12
 }
 
-
-# -----------------------------------------
+# ============================================
 # FUNCIONES DE TEXTO
-# -----------------------------------------
+# ============================================
 
-def limpiar_espacios(texto):
-    """Elimina espacios en los extremos y colapsa los dobles espacios intermedios."""
-    if texto is None:
+def convertir_valor_a_texto(
+    valor
+):
+
+    if valor is None:
+
         return ""
-    return " ".join(str(texto).split())
 
+    return str(valor)
 
-def es_valor_vacio(texto):
-    """Determina si una cadena equivale conceptualmente a un dato ausente."""
-    texto_limpio = limpiar_espacios(texto).upper()
-    valores_nulos = ["", "N/A", "-", "NO DISPONIBLE", "VACIO", "NONE"]
-    return texto_limpio in valores_nulos
+# ============================================
 
+def eliminar_espacios_inicio_y_final(
+    texto
+):
 
-def corregir_palabra_tilde(palabra):
-    """Busca una palabra individual en el diccionario de tildes o aplica mayúscula inicial."""
-    palabra_min = palabra.lower().strip()
-    if palabra_min in correcciones_tildes:
-        return correcciones_tildes[palabra_min]
-    
-    if len(palabra) > 0:
-        return palabra[0].upper() + palabra[1:]
-    return palabra
+    return texto.strip()
 
+# ============================================
 
-def normalizar_texto(texto):
-    """Limpia los espacios y aplica las correcciones ortográficas palabra por palabra."""
-    if es_valor_vacio(texto):
-        return "SIN DATOS"
-    
-    palabras = limpiar_espacios(texto).split()
-    palabras_corregidas = [corregir_palabra_tilde(p) for p in palabras]
-    return " ".join(palabras_corregidas)
+def eliminar_espacios_multiples(
+    texto
+):
 
+    return " ".join(
+        texto.split()
+    )
 
-# -----------------------------------------
-# FUNCIONES DE NÚMEROS Y MONEDAS
-# -----------------------------------------
+# ============================================
 
-def limpiar_simbolos_moneda(cadena):
-    """Quita los caracteres de divisa y espacios en blanco internos."""
-    return cadena.replace('€', '').replace('$', '').replace(' ', '')
+def limpiar_texto(
+    texto
+):
 
+    texto = convertir_valor_a_texto(
+        texto
+    )
 
-def unificar_separadores_decimales(cadena):
-    """Transforma formatos numéricos europeos (puntos en miles, comas en decimales) a estándar."""
-    if ',' in cadena and '.' in cadena:
-        cadena = cadena.replace('.', '')  # Elimina separador de miles
-        cadena = cadena.replace(',', '.')  # Convierte decimal
-    elif ',' in cadena:
-        cadena = cadena.replace(',', '.')
-    return cadena
+    texto = eliminar_espacios_inicio_y_final(
+        texto
+    )
 
+    texto = eliminar_espacios_multiples(
+        texto
+    )
 
-def limpiar_valor_numerico(valor):
-    """Transforma de manera segura importes sucios a float."""
-    if valor is None or es_valor_vacio(str(valor)):
-        return None
-    
-    procesado = str(valor).strip()
-    procesado = limpiar_simbolos_moneda(procesado)
-    procesado = unificar_separadores_decimales(procesado)
-    
-    try:
-        return float(procesado)
-    except ValueError:
-        return None
+    return texto
 
+# ============================================
+# FUNCIONES DE TILDES
+# ============================================
 
-# -----------------------------------------
-# FUNCIONES DE IDENTIFICADORES Y FORMATOS ESPECÍFICOS
-# -----------------------------------------
+def dividir_texto_en_palabras(
+    texto
+):
 
-def limpiar_id(identificador):
-    """Estandariza códigos de identificación a minúsculas sin espacios."""
-    # CORREGIDO: Se cambia 'valor' por 'identificador'
-    if identificador is None or es_valor_vacio(str(identificador)):
-        return "SIN DATOS"
-    return str(identificador).strip().lower()
+    return texto.split()
 
+# ============================================
 
-def limpiar_dni(dni):
-    """Aplica el rellenado con ceros a la izquierda y valida la estructura."""
-    if dni is None or es_valor_vacio(str(dni)):
-        return "SIN DATOS"
-    
-    dni_limpio = str(dni).strip().upper()
-    dni_formateado = dni_limpio.zfill(9)  # Asegura longitud de 9
-    
-    # Comprobación de estructura 
-    parte_num = dni_formateado[:8]
-    parte_letra = dni_formateado[-1]
-    
-    if len(dni_formateado) == 9 and parte_num.isdigit() and parte_letra.isalpha():
-        return dni_formateado
-    
-    print(f"AVISO CRÍTICO: Estructura de DNI corrupta detectada → '{dni}'")
-    return "REVISAR MANUALMENTE"
+def unir_palabras_en_texto(
+    lista_palabras
+):
 
+    return " ".join(
+        lista_palabras
+    )
 
-def normalizar_categoria(valor, diccionario_mapeo, campo_nombre="categoria"):
-    """Normaliza un campo categórico cruzándolo con su diccionario de mapeo."""
-    if valor is None or es_valor_vacio(str(valor)) or valor == "SIN DATOS":
-        return "SIN DATOS"
-        
-    valor_limpio = str(valor).lower().strip()
-    
-    if valor_limpio in diccionario_mapeo:
-        return diccionario_mapeo[valor_limpio]
-    
-    print(f"AVISO: Valor no reconocido en {campo_nombre} → '{valor}'")
+# ============================================
+
+def corregir_tilde_de_palabra(
+    palabra
+):
+
+    palabra_limpia = palabra.lower()
+
+    if palabra_limpia in correcciones_tildes:
+
+        return correcciones_tildes[
+            palabra_limpia
+        ]
+
+    return palabra.capitalize()
+
+# ============================================
+
+def corregir_tildes_del_texto(
+    texto
+):
+
+    palabras = dividir_texto_en_palabras(
+        texto
+    )
+
+    palabras_corregidas = []
+
+    for palabra in palabras:
+
+        palabra_corregida = corregir_tilde_de_palabra(
+            palabra
+        )
+
+        palabras_corregidas.append(
+            palabra_corregida
+        )
+
+    return unir_palabras_en_texto(
+        palabras_corregidas
+    )
+
+# ============================================
+
+def normalizar_texto(
+    texto
+):
+
+    texto = limpiar_texto(
+        texto
+    )
+
+    texto = corregir_tildes_del_texto(
+        texto
+    )
+
+    return texto
+
+# ============================================
+# FUNCIONES DE CATEGORÍAS
+# ============================================
+
+def convertir_categoria_a_minusculas(
+    valor
+):
+
+    valor = convertir_valor_a_texto(
+        valor
+    )
+
+    valor = valor.lower()
+
+    valor = valor.strip()
+
     return valor
 
+# ============================================
 
-# ------------------------------------------
-# FUNCIONES DE TRATAMIENTO DE FECHAS 
-#------------------------------------------
+def normalizar_categoria(
+    valor,
+    tipo_categoria
+):
 
-def formato_texto_largo(cadena):
-    """Procesa formato: 'DD de mes de AAAA' (ej. 15 de julio de 2026)."""
-    partes = cadena.split(" de ")
-    if len(partes) == 3:
-        try:
-            dia = int(partes[0].strip())
-            mes = meses_maestros.get(partes[1].strip().lower())
-            anio = int(partes[2].strip())
-            return dia, mes, anio
-        except ValueError:
-            pass
-    return None, None, None
+    valor_original = valor
 
+    valor = convertir_categoria_a_minusculas(
+        valor
+    )
 
-def formato_americano(cadena):
-    """Procesa formato: 'mes DD, AAAA' (ej. julio 15, 2026)."""
-    cadena_limpia = cadena.replace(",", "")
-    partes = tuple(cadena_limpia.split())
-    if len(partes) == 3:
-        try:
-            m = meses_maestros.get(partes[0].strip().lower())
-            d = int(partes[1].strip())
-            a = int(partes[2].strip())
-            return d, m, a
-        except ValueError:
-            pass
-    return None, None, None
+    categorias = mapeos_categorias.get(
+        tipo_categoria,
+        {}
+    )
 
+    if valor in categorias:
 
-def formato_guiones(cadena):
-    """Procesa formatos basados en guiones: AAAA-MM-DD o DD-MM-AAAA."""
-    partes = cadena.split("-")
-    if len(partes) == 3:
-        try:
-            if len(partes[0].strip()) == 4:  # AAAA-MM-DD
-                a = int(partes[0].strip())
-                m = int(partes[1].strip())
-                d = int(partes[2].strip())
-            else:  # DD-MM-AAAA o DD-mes-AAAA
-                d = int(partes[0].strip())
-                centro = partes[1].strip().lower()
-                m = int(centro) if centro.isdigit() else meses_maestros.get(centro)
-                a = int(partes[2].strip())
-            return d, m, a
-        except ValueError:
-            pass
-    return None, None, None
+        return categorias[valor]
 
+    print(
 
-def formato_barras(cadena):
-    """Procesa formatos basados en barras: DD/MM/AAAA o DD/M/AA."""
-    partes = cadena.split("/")
-    if len(partes) == 3:
-        try:
-            d = int(partes[0].strip())
-            m = int(partes[1].strip())
-            anio_str = partes[2].strip()
-            a = int(anio_str) + 2000 if len(anio_str) == 2 else int(anio_str)
-            return d, m, a
-        except ValueError:
-            pass
-    return None, None, None
+        f"AVISO: valor no reconocido "
 
+        f"en {tipo_categoria}: {valor_original}"
+    )
 
-def normalizar_fecha(fecha_texto):
-    """Función unificadora que enruta la cadena hacia su analizador correspondiente.
-    
-    Construye y devuelve una cadena de texto (un string) que representa una fecha 
-    con el formato estandarizado Día/Mes/Año.
-    
-    El truco de magia: :02d
-    Tanto en {dia:02d} como en {mes:02d}, estamos aplicando un formateo especial 
-    a los números enteros. Si lo dividimos en tres partes:
-      - d: Indica que la variable que hay dentro es un entero (decimal integer).
-      - 2: Indica el ancho mínimo que debe tener el texto resultante (2 caracteres).
-      - 0: Indica con qué carácter queremos rellenar el espacio vacío (con ceros).
-    """
-    if fecha_texto is None or es_valor_vacio(str(fecha_texto)):
+    return valor_original
+
+# ============================================
+# FUNCIONES NUMÉRICAS
+# ============================================
+
+def eliminar_simbolos_monetarios(
+    valor
+):
+
+    valor = valor.replace(
+        "€",
+        ""
+    )
+
+    valor = valor.replace(
+        "$",
+        ""
+    )
+
+    return valor
+
+# ============================================
+
+def eliminar_puntos_de_miles(
+    valor
+):
+
+    return valor.replace(
+        ".",
+        ""
+    )
+
+# ============================================
+
+def convertir_comas_decimales(
+    valor
+):
+
+    return valor.replace(
+        ",",
+        "."
+    )
+
+# ============================================
+
+def convertir_texto_a_float(
+    valor
+):
+
+    return float(valor)
+
+# ============================================
+
+def limpiar_valor_numerico(
+    valor
+):
+
+    if valor is None:
+
+        return None
+
+    try:
+
+        valor = convertir_valor_a_texto(
+            valor
+        )
+
+        valor = eliminar_espacios_inicio_y_final(
+            valor
+        )
+
+        valor = eliminar_simbolos_monetarios(
+            valor
+        )
+
+        valor = eliminar_puntos_de_miles(
+            valor
+        )
+
+        valor = convertir_comas_decimales(
+            valor
+        )
+
+        valor = convertir_texto_a_float(
+            valor
+        )
+
+        return valor
+
+    except:
+
+        return None
+
+# ============================================
+# FUNCIONES DE FECHAS
+# ============================================
+
+def normalizar_fecha(
+    fecha
+):
+
+    if not fecha:
+
         return "FECHA INVÁLIDA"
-        
-    cadena = str(fecha_texto).strip().lower()
-    dia, mes, anio = None, None, None
 
-    if " de " in cadena:
-        dia, mes, anio = formato_texto_largo(cadena)
-    elif "," in cadena:
-        dia, mes, anio = formato_americano(cadena)
-    elif "-" in cadena:
-        dia, mes, anio = formato_guiones(cadena)
-    elif "/" in cadena:
-        dia, mes, anio = formato_barras(cadena)
+    try:
 
-    # Validación final del calendario
-    if dia is not None and mes is not None and anio is not None:
-        if 1 <= dia <= 31 and 1 <= mes <= 12 and anio > 0:
-            return f"{dia:02d}/{mes:02d}/{anio}"
-            
-    print(f"AVISO: Estructura de fecha no reconocida → '{fecha_texto}'")
-    return "FECHA INVÁLIDA"
+        fecha = convertir_valor_a_texto(
+            fecha
+        )
 
+        fecha = fecha.lower().strip()
 
-# ------------------------------------------------------------------------------
-# FILTRADO E INTEGRIDAD LOGICA
-# ------------------------------------------------------------------------------
+        if "-" in fecha:
 
-def contar_vacios(registro):
-    """Cuenta cuántos campos vacíos o marcados con alertas tiene un diccionario."""
-    alertas_vacio = ["", "SIN DATOS", "FECHA INVÁLIDA", "REVISAR MANUALMENTE", None]
-    return sum(1 for valor in registro.values() if valor in alertas_vacio)
+            año, mes, dia = fecha.split(
+                "-"
+            )
 
+        elif "/" in fecha:
 
-def eliminar_duplicados(datos, campos_clave):
-    """Elimina duplicados manteniendo el registro que contenga mayor cantidad de información."""
-    tabla_unicos = {}
-    conteo_eliminados = 0
-    
-    for registro in datos:
-        # Generamos clave única usando los campos asignados
-        clave = tuple(str(registro.get(campo, "")).lower().strip() for campo in campos_clave)
-        
-        vacios_actual = contar_vacios(registro)
-        
-        if clave in tabla_unicos:
-            conteo_eliminados += 1
-            vacios_guardado = contar_vacios(tabla_unicos[clave])
-            # Si el nuevo registro tiene menos campos vacíos, lo sustituimos
-            if vacios_actual < vacios_guardado:
-                tabla_unicos[clave] = registro
+            dia, mes, año = fecha.split(
+                "/"
+            )
+
+        elif " de " in fecha:
+
+            partes = fecha.split(
+                " de "
+            )
+
+            dia = partes[0]
+
+            mes = meses_maestros[
+                partes[1]
+            ]
+
+            año = partes[2]
+
         else:
-            tabla_unicos[clave] = registro
-            
-    return list(tabla_unicos.values()), conteo_eliminados
+
+            return "FECHA INVÁLIDA"
+
+        return (
+
+            f"{int(dia):02d}/"
+
+            f"{int(mes):02d}/"
+
+            f"{int(año)}"
+        )
+
+    except:
+
+        return "FECHA INVÁLIDA"
+
+# ============================================
+# FUNCIONES DE DUPLICADOS
+# ============================================
+
+def crear_clave_unica(
+    registro,
+    campos_clave
+):
+
+    return tuple(
+
+        str(
+            registro[campo]
+        ).lower().strip()
+
+        for campo in campos_clave
+    )
+
+# ============================================
+
+def contar_campos_vacios(
+    registro
+):
+
+    contador = 0
+
+    for valor in registro.values():
+
+        if not valor:
+
+            contador += 1
+
+    return contador
+
+# ============================================
+
+def eliminar_duplicados(
+    lista_datos,
+    campos_clave
+):
+
+    registros_unicos = {}
+
+    for registro in lista_datos:
+
+        clave = crear_clave_unica(
+
+            registro,
+
+            campos_clave
+        )
+
+        if clave not in registros_unicos:
+
+            registros_unicos[
+                clave
+            ] = registro
+
+        else:
+
+            registro_actual = registros_unicos[
+                clave
+            ]
+
+            vacios_actual = contar_campos_vacios(
+                registro_actual
+            )
+
+            vacios_nuevo = contar_campos_vacios(
+                registro
+            )
+
+            if vacios_nuevo < vacios_actual:
+
+                registros_unicos[
+                    clave
+                ] = registro
+
+    return list(
+        registros_unicos.values()
+    )

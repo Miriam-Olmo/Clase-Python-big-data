@@ -52,6 +52,26 @@ meses_maestros = {
 # -----------------------------------------
 # FUNCIONES DE TEXTO
 # -----------------------------------------
+def limpiar_texto(texto):
+    if texto is None: 
+        return ""
+    # Dividir por espacios en blanco y volver a juntar (elimina saltos de línea y espacios múltiples)
+    return " ".join(str(texto).split()).strip()
+
+def normalizar_texto(texto):
+    texto_limpio = limpiar_texto(texto)
+    if not texto_limpio: 
+        return ""
+    
+    palabras = texto_limpio.split()
+    palabras_procesadas = []
+    for palabra in palabras:
+        palabra_title = palabra.title()
+        palabra_procesada = correcciones_tildes.get(palabra_title.lower(), palabra_title)
+        palabras_procesadas.append(palabra_procesada)
+        
+    return " ".join(palabras_procesadas)
+
 
 def limpiar_espacios(texto):
     """Elimina espacios en los extremos y colapsa los dobles espacios intermedios."""
@@ -78,15 +98,6 @@ def corregir_palabra_tilde(palabra):
     return palabra
 
 
-def normalizar_texto(texto):
-    """Limpia los espacios y aplica las correcciones ortográficas palabra por palabra."""
-    if es_valor_vacio(texto):
-        return "SIN DATOS"
-    
-    palabras = limpiar_espacios(texto).split()
-    palabras_corregidas = [corregir_palabra_tilde(p) for p in palabras]
-    return " ".join(palabras_corregidas)
-
 
 # -----------------------------------------
 # FUNCIONES DE NÚMEROS Y MONEDAS
@@ -109,15 +120,28 @@ def unificar_separadores_decimales(cadena):
 
 def limpiar_valor_numerico(valor):
     """Transforma de manera segura importes sucios a float."""
-    if valor is None or es_valor_vacio(str(valor)):
+    if valor == None or es_valor_vacio(str(valor)):
         return None
-    
-    procesado = str(valor).strip()
-    procesado = limpiar_simbolos_moneda(procesado)
-    procesado = unificar_separadores_decimales(procesado)
-    
     try:
-        return float(procesado)
+        cadena_limpia = str(valor).strip().lower()
+        cadena_limpia = cadena_limpia.replace("€", "").replace("$", "").replace("eur", "")
+        cadena_limpia = "".join(cadena_limpia.split())
+        
+        if "," in cadena_limpia and "." in cadena_limpia:
+            if cadena_limpia.find(".") < cadena_limpia.find(","):
+                cadena_limpia = cadena_limpia.replace(".", "").replace(",", ".")
+            else:
+                cadena_limpia = cadena_limpia.replace(",", "")
+        elif "," in cadena_limpia:
+            partes_decimales = cadena_limpia.split(",")
+            if len(partes_decimales[-1]) == 2:
+                cadena_limpia = cadena_limpia.replace(",", ".")
+            else:
+                cadena_limpia = cadena_limpia.replace(",", "")
+                
+        if "." in cadena_limpia:
+            return float(cadena_limpia)
+        return int(cadena_limpia)
     except ValueError:
         return None
 
