@@ -1,0 +1,2 @@
+id_venta,nombre_comprador,email,dni,tipo_entrada,precio,fecha_compra,metodo_pago
+VNT-00189,  Guillermo Jiménez ,guillermo.jimenez@yahoo.es,21507650,General,65,22/05/2026,paypal
