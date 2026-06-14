@@ -1,117 +1,51 @@
+# importar csv
 import csv
-from openpyxl import load_workbook
-import os
+#importar json
 import json
+# importar xml
 import xml.etree.ElementTree as et
+# importar excel para su lectura
+from openpyxl import load_workbook
 
-
-def mostrar_info(nombre_fichero, columnas, registros):
-
-    print("\n" + "=" * 50)
-    print("FICHERO:", nombre_fichero)
-    print("=" * 50)
-
-    # Número total de registros
-    print("\nNúmero total de registros:", len(registros))
-
-    # Campos / columnas
-    print("\nCampos/Columnas:")
-    print(columnas)
-
-    # Primeros 5 registros
-    print("\nPrimeros 5 registros:")
-
-    for registro in registros[:5]:
-        print(registro)
-
-
-
-
-def cargar_csv(carpeta, archivo):
-    fichero = open(f"{carpeta}/{archivo}", "r", encoding='UTF-8')
-    lector = csv.DictReader(fichero) 
+# cargar csv 
+def cargar_csv(ruta):
+    fichero = open(ruta, 'r', encoding='utf-8')
+    lector = csv.DictReader(fichero)
     artistas = list(lector)
     fichero.close()
     return artistas
-cargar_csv('datos', 'artistas.csv')
 
-
-
-
-def cargar_excel(carpeta, archivo):
-   excel = load_workbook(f"./{carpeta}/{archivo}")
-   hoja = excel.active
-   
-   filas = hoja.iter_rows(values_only = True)
-   cabeceras = next(filas)
-   
-   lista_resultante = []
-   for fila in hoja.iter_rows(min_row=2, values_only=True):
-       escenario = dict(zip(cabeceras, fila))
-       lista_resultante.append(escenario)
-       
-   return lista_resultante
-
-cargar_excel('datos', 'escenarios_horarios.xlsx')
-
-
-
-
-def cargar_json(carpeta, nombre):
-    fichero = open(f"./{carpeta}/{nombre}", "r", encoding="UTF-8")
+def cargar_json(ruta):
+    fichero = open(ruta, 'r', encoding='utf-8')
     datos = json.load(fichero)
     fichero.close()
     return datos
 
-cargar_json('datos', 'ventas_entradas.json')
-
-
-
-
-
-def cargar_xml(carpeta, fichero):
-    # leer un archivo en bruto
-    fichero = et.parse(f'./{carpeta}/{fichero}')
-    # me devuelve el nodo principal
-    nodo_raiz = fichero.getroot()
-
+def cargar_xml(ruta):
+    arbol = et.parse(ruta)
+    nodo_padre = arbol.getroot()
     patrocinadores = []
 
-    for patrocinador in nodo_raiz.findall('patrocinador'):
-        patrocinador = {
+    for patrocinador in nodo_padre.findall('patrocinador'):
+        datos_patrocinador ={
             'nombre_empresa': patrocinador.find('nombre_empresa').text,
             'contacto': patrocinador.find('contacto').text,
             'email': patrocinador.find('email').text,
-            'importe_patrocinio': patrocinador.find('importe_patrocinio').text,
+            'importe_patrocinio': patrocinador.find('importe_patrocinio').text if patrocinador.find is not None else None,
             'categoria': patrocinador.find('categoria').text,
             'fecha_inicio': patrocinador.find('fecha_inicio').text,
             'fecha_fin': patrocinador.find('fecha_fin').text
         }
-        patrocinadores.append(patrocinador)
+        patrocinadores.append (datos_patrocinador)
     return patrocinadores
-    
-cargar_xml('datos', 'patrocinadores.xml')
 
-
-def resumen(nombre, datos):
-
-    print("\n==========")
-    print(nombre)
-    print("==========")
-    # contar cuántas filas o registros totales tiene
-    print("Total registros:", len(datos))
-
-    print("\nCampos:")
-    # coje las cabeceras
-    for campo in datos[0].keys():
-        print("-", campo)
-
-    print("\nPrimeros 5 registros:")
-    # coge los 5 primeros registros
-    for registro in datos[:5]:
-        print(registro)
-
-artistas = cargar_csv('datos', 'artistas.csv')
-horarios = cargar_excel('datos', 'escenarios_horarios.xlsx')
-ventas = cargar_json('datos', 'ventas_entradas.json')
-patrocinadores = cargar_xml('datos', 'patrocinadores.xml')
+def cargar_excel(ruta):
+    excel = load_workbook(ruta)
+    hoja = excel.active
+    filas = hoja.iter_rows(values_only=True)
+    cabeceras = next(filas)
+    lista = []
+    for fila in hoja.iter_rows(min_row=2, values_only=True):
+        dato = dict(zip(cabeceras, fila))
+        lista.append(dato)
+    return lista
